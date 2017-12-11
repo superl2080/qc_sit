@@ -13,16 +13,16 @@
 - node_modules: 运行时下载的依赖包（临时）
 ------------------------------------------------------------------
 
-环境配置
-1. 安装环境
+# 环境配置
+# 1. 安装环境
 1.1. 安装nodejs环境
-curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
-sudo yum -y install nodejs gcc gcc-c++
-sudo npm -g install gulp pm2 cnpm
+- curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
+- sudo yum -y install nodejs gcc gcc-c++
+- sudo npm -g install gulp pm2 cnpm
 
 
 1.2. 安装配置nginx
-sudo vi /etc/yum.repos.d/nginx.repo
+- sudo vi /etc/yum.repos.d/nginx.repo
 修改内容如下：
 ------------------------------------------------------------------
 [nginx]
@@ -31,9 +31,8 @@ baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
 gpgcheck=0
 enabled=1
 ------------------------------------------------------------------
-
-sudo yum -y install nginx
-sudo vi /etc/nginx/conf.d/default.conf
+- sudo yum -y install nginx
+- sudo vi /etc/nginx/conf.d/default.conf
 修改内容如下：
 ------------------------------------------------------------------
 server {
@@ -74,7 +73,7 @@ server {
 ------------------------------------------------------------------
 
 1.3. 安装Mongo DB
-sudo vi /etc/yum.repos.d/mongodb-org-3.4.repo
+- sudo vi /etc/yum.repos.d/mongodb-org-3.4.repo
 修改内容如下：
 ------------------------------------------------------------------
 [mongodb-org-3.4]
@@ -84,11 +83,9 @@ gpgcheck=1
 enabled=1
 gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 ------------------------------------------------------------------
+- sudo yum install -y mongodb-org
 
-sudo yum install -y mongodb-org
-
-
-2. 拷贝代码
+# 2. 拷贝代码
 2.1. 拷贝代码
 
 2.2. 下载项目依赖包
@@ -98,7 +95,7 @@ sudo yum install -y mongodb-org
 [SIT]$ gulp
 
 
-3. 运行
+# 3. 运行
 3.1. 启动Mongo DB
 sudo service mongod start
 
