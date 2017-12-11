@@ -89,18 +89,18 @@ gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 2.1. 拷贝代码
 
 2.2. 下载项目依赖包
-[SIT]$ sudo cnpm install
+- [SIT]$ sudo cnpm install
 
 2.3. 打包前端代码
-[SIT]$ gulp
+- [SIT]$ gulp
 
 
 # 3. 运行
 3.1. 启动Mongo DB
-sudo service mongod start
+- sudo service mongod start
 
 3.2. 启动nginx
-sudo nginx
+- sudo nginx
 
 3.3. 启动node项目
-[SIT]$ pm2 start ./bin/www --name SIT
+- [SIT]$ pm2 start ./bin/www --name SIT
