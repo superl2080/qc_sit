@@ -1,0 +1,52 @@
+
+<div class="home-top z-depth-1">
+	<div class="home-top-left">
+		<h5>免费领用</h5>
+	</div>
+
+	<div class="home-top-right">
+		<a class="black-text" id="home"><h6>< 返回</h6></a>
+	</div>
+</div>
+
+<div class="order">
+	<div class="order-row">
+		<div class="row-left">
+<%  if(deviceInfo.type == 'ZHIJIN') { %>
+			<p>纸帕巾  ×1</p>
+<%  } else if(deviceInfo.type == 'JUANZHI') { %>
+			<p>卷纸  ×1</p>
+<%  } %>
+		</div>
+		<div class="row-right">
+			<p>￥<%= deviceInfo.income / 100 %></p>
+		</div>
+	</div>
+
+	<div class="order-row total">
+		<div class="row-left">
+		</div>
+		<div class="row-right">
+			<p>小计  ￥<%= deviceInfo.income / 100 %></p>
+		</div>
+	</div>
+	<div class="order-row">
+		<div class="row-center">
+			<button class="waves-effect waves-light btn orange darken-2 white-text" id="orderPay">支付领用</button>
+		</div>
+	</div>
+</div>
+
+<%  if(activityInfo) { %>
+<div class="activity border">
+	<div class="activity-left">
+		<h5 class="wrap">做任务，免费领</h5>
+		<h6 class="wrap">长按二维码并识别，关注公众号</h6>
+		<h6 class="wrap"><span class="card-panel z-depth-0 pink lighten-2 white-text">免</span>本单免费领用</h6>
+		<h6 class="wrap"><span class="card-panel z-depth-0 pink lighten-2 white-text">抽</span>18.88元现金红包</h6>
+	</div>
+	<div class="activity-right">
+		<img src=<%= activityInfo.qrcodeUrl %> />
+	</div>
+</div>
+<%  } %>

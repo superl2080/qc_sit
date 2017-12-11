@@ -1,0 +1,265 @@
+
+/*--------------------------------------------------------------------------
++	home
+--------------------------------------------------------------------------*/
+#frame-content {
+	height: 100%;
+	overflow: hidden;
+}
+
+.home-top {
+	height: 40px;
+	padding: 0 20px;
+	display: -webkit-flex;
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+
+	.home-top-left {
+		height: 40px;
+		width: 50%;
+		display: -webkit-flex;
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: center;
+		justify-content: flex-start;
+	}
+	.home-top-right {
+		height: 40px;
+		width: 50%;
+		display: -webkit-flex;
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: center;
+		justify-content: flex-end;
+	}
+}
+
+.home-background {
+	z-index: -1;
+	top: 0px;
+    left: 0px;
+	height: 100%;
+	width: 100%;
+    position: fixed;
+    background: url(../images/background.jpg) no-repeat;
+    background-size: 100% 100%;
+}
+
+.order {
+	width: 100%;
+	padding: 40px;
+
+	.total {
+		border-top: 1px solid #ccc;
+	}
+	.order-row {
+		height: 40px;
+		display: -webkit-flex;
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: center;
+
+		.card-panel {
+			padding: .1rem;
+			margin: 0 .1rem 0 0;
+			box-shadow: 0;
+		}
+		.row-left {
+			height: 40px;
+			width: 50%;
+			display: -webkit-flex;
+			display: flex;
+			flex-wrap: nowrap;
+			align-items: center;
+			justify-content: flex-start;
+		}
+		.row-center {
+			height: 40px;
+			width: 100%;
+			display: -webkit-flex;
+			display: flex;
+			flex-wrap: nowrap;
+			align-items: center;
+			justify-content: center;
+		}
+		.row-right {
+			height: 40px;
+			width: 50%;
+			display: -webkit-flex;
+			display: flex;
+			flex-wrap: nowrap;
+			align-items: center;
+			justify-content: flex-end;
+		}
+	}
+}
+
+
+.activity {
+	height: 160px;
+	margin: 10px;
+	padding: 10px;
+	display: -webkit-flex;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+
+	.wrap {
+		width: 100%;
+	}
+	.activity-left {
+		height: 160px;
+		width: 50%;
+		padding-right: 20px;
+		display: -webkit-flex;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: flex-start;
+		p {
+			margin: 0;
+		}
+		.card-panel {
+			padding: .1rem;
+			margin: 0 .1rem 0 0;
+			box-shadow: 0;
+		}
+	}
+	.activity-right {
+		height: 160px;
+		width: 50%;
+		display: -webkit-flex;
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: center;
+		justify-content: flex-end;
+		img {
+			width: 140px;
+			height: 140px;
+		}
+	}
+	.activity-up {
+		height: 160px;
+		width: 100%;
+		padding-right: 20px;
+		display: -webkit-flex;
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		p {
+			margin: 0;
+		}
+		.card-panel {
+			padding: .1rem;
+			margin: 0 .1rem 0 0;
+			box-shadow: 0;
+		}
+	}
+	.activity-down {
+		height: 160px;
+		width: 100%;
+		display: -webkit-flex;
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		img {
+			width: 140px;
+			height: 140px;
+		}
+	}
+}
+
+.activity.border {
+	border: 1px solid #ccc;
+}
+
+
+/*--------------------------------------------------------------------------
++	error view
+--------------------------------------------------------------------------*/
+
+.error-browser {
+	text-align: center;
+	width: 100%;
+	margin-top: 30%;
+}
+
+
+/*--------------------------------------------------------------------------
++	materialize rewrite
+--------------------------------------------------------------------------*/
+
+html, body {
+	height: 100%;
+}
+
+span {
+	font-size: 0.8rem;
+}
+
+.progress {
+	width: 80%;
+	margin: 40% 10%;
+}
+
+.carousel {
+	&.carousel-slider {
+		height: 80%;
+		width: 88%;
+		margin: 0 6%;
+
+		.carousel-item {
+			.position {
+				img {
+					width: 24px;
+					height: 24px;
+					margin: 0;
+				}
+				width: 100%;
+				height: 40px;
+				display: -webkit-flex;
+				display: flex;
+				flex-wrap: nowrap;
+				align-items: center;
+				justify-content: center;
+			}
+			h2 {
+				margin: 0;
+			}
+			img {
+				width: 50%;
+				margin: 1em 25%;
+			}
+			a {
+				margin: 1em;
+			}
+		}
+	}
+
+  	.indicators {
+		position: relative;
+
+		.indicator-item {
+			&.active {
+				background-color: #000;
+			}
+
+			display: inline-block;
+			position: relative;
+			cursor: pointer;
+			height: 8px;
+			width: 8px;
+			margin: 24px 4px;
+			background-color: rgba(0,0,0,.3);
+
+			transition: background-color .3s;
+			border-radius: 50%;
+		}
+  	}
+}
+
