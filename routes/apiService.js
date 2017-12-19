@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 var userModel = mongoose.model('user');
 var partnerModel = mongoose.model('partner');
 var aderModel = mongoose.model('ader');
-var adminModel = mongoose.model('admin');
 var deviceModel = mongoose.model('device');
 var deviceOrderModel = mongoose.model('deviceOrder');
 var incomeOrderModel = mongoose.model('incomeOrder');

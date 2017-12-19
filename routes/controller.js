@@ -313,6 +313,8 @@ router.post('/page/order/pay', function(req, res, next) {
         CreateDeviceOrder: ['GetDeviceOrderInfo', function (results, callback) {
             if(req.session.deviceOrderInfo.state != 'OPEN') {
                 model.CreateDeviceOrder(option, callback);
+            } else {
+                callback(null);
             }
         }],
         PrePay: ['CreateDeviceOrder', function (results, callback) {

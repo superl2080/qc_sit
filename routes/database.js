@@ -42,15 +42,6 @@ var adSchema = new Schema({
     date: Date
 });
 
-var adminSchema = new Schema({
-    /* Fixed */
-    isRoot: Boolean,
-    signDate: Date,
-    /* Free */
-    name: String,
-    balance: Number
-});
-
 var deviceSchema = new Schema({
     /* Snap */
     partnerId: Schema.Types.ObjectId,
@@ -96,7 +87,6 @@ var userModel = mongoose.model('user', userSchema);
 var partnerModel = mongoose.model('partner', partnerSchema);
 var aderModel = mongoose.model('ader', aderSchema);
 var adModel = mongoose.model('ad', adSchema);
-var adminModel = mongoose.model('admin', adminSchema);
 var deviceModel = mongoose.model('device', deviceSchema);
 var deviceOrderModel = mongoose.model('deviceOrder', deviceOrderSchema);
 var incomeOrderModel = mongoose.model('incomeOrder', incomeOrderSchema);
