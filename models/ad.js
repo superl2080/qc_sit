@@ -24,6 +24,7 @@ const adSchema = new mongoose.Schema({
         state: String, //'OPEN', 'SUCCESS', 'FAIL'
 
         appid: String,
+        app_secret: String,
         qrcode_url: String,
         service_type: Number,
         verify_type: Number,
