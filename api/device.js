@@ -1,6 +1,7 @@
 
 const request = require('request');
 
+const SERVICE_URL = 'http://106.14.195.50:80';
 
 const TakeDeviceItem = exports.TakeDeviceItem = (param, callback) => {
     console.log('[CALL] TakeDeviceItem, param:');
@@ -14,7 +15,7 @@ const TakeDeviceItem = exports.TakeDeviceItem = (param, callback) => {
     }
 
     var option = {
-        url: 'http://106.14.195.50:80/api/TakeDeviceItem',
+        url: SERVICE_URL + '/api/TakeDeviceItem',
         method: 'POST',
         headers: {  
             'content-type': 'application/json'
