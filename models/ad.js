@@ -72,7 +72,6 @@ const CreateAuthAd = exports.CreateAuthAd = (param, callback) => {
                 payout: ader.payout,
                 income: ader.income
             }
-        })
-        .exec(callback);
+        }, callback);
     });
 }
