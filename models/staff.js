@@ -4,7 +4,7 @@ const cryptHelper = require('../helpers/crypt');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
-const operatorSchema = new mongoose.Schema({
+const staffSchema = new mongoose.Schema({
 
     id:                     { type: String,             required: true, index: true, unique: true },
     password:               { type: String,             required: true, set: cryptHelper.PasswordCrypt },
@@ -19,7 +19,7 @@ const operatorSchema = new mongoose.Schema({
     }
 });
 
-const operatorModel = mongoose.model('operator', operatorSchema);
+const staffModel = mongoose.model('staff', staffSchema);
 
 
 const CheckPassword = exports.CheckPassword = (param, callback) => {
@@ -30,14 +30,14 @@ const CheckPassword = exports.CheckPassword = (param, callback) => {
         return ;
     }
 
-    operatorModel.findOne({ id: param.id })
-    .exec(function (err, operator) {
-        if( !operator ) {
-            callback(new Error('can not find operator'));
+    staffModel.findOne({ id: param.id })
+    .exec(function (err, staff) {
+        if( !staff ) {
+            callback(new Error('can not find staff'));
         } else {
             callback(null, cryptHelper.PasswordCompare({
                 passwordAuth: param.password,
-                passwordCrypt: operator.password
+                passwordCrypt: staff.password
             }));
         }
     });

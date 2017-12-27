@@ -1,5 +1,5 @@
 
-const operatorConfigModel = require('../models/operatorConfig');
+const systemConfigModel = require('../models/systemConfig');
 const cryptHelper = require('./crypt');
 
 const WECHAT_OPEN_APP_ID = process.env.WECHAT_OPEN_APP_ID;
@@ -55,6 +55,6 @@ const Encrypt = exports.Encrypt = (msgDecrypt) => {
 };
  
 const UpdateTicket = exports.UpdateTicket = (newTicket, callback) => {
-    operatorConfigModel.UpdateTicket(newTicket, callback);
+    systemConfigModel.UpdateTicket(newTicket, callback);
 }
 

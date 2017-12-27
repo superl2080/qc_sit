@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
-const operatorConfigSchema = new mongoose.Schema({
+const systemConfigSchema = new mongoose.Schema({
 
     wechatOpen: {
         ticket:             String,
@@ -12,19 +12,19 @@ const operatorConfigSchema = new mongoose.Schema({
     }
 });
 
-const operatorConfigModel = mongoose.model('operatorConfig', operatorConfigSchema);
+const systemConfigModel = mongoose.model('systemConfig', systemConfigSchema);
 
 
 const GetTicket = exports.GetTicket = (param, callback) => {
 
-    operatorConfigModel.findOne({ })
-    .exec(function (err, operatorConfig) {
-        if( !operatorConfig ||
-            !operatorConfig.wechatOpen ||
-            !operatorConfig.wechatOpen.ticket ) {
+    systemConfigModel.findOne({ })
+    .exec(function (err, systemConfig) {
+        if( !systemConfig ||
+            !systemConfig.wechatOpen ||
+            !systemConfig.wechatOpen.ticket ) {
             callback(new Error('ticket is empty'));
         } else {
-            callback(null, operatorConfig.wechatOpen.ticket);
+            callback(null, systemConfig.wechatOpen.ticket);
         }
     });
 }
@@ -35,17 +35,17 @@ const UpdateTicket = exports.UpdateTicket = (newTicket, callback) => {
         return ;
     }
 
-    operatorConfigModel.findOne({ })
-    .exec(function (err, operatorConfig) {
-        if( !operatorConfig ) {
-            operatorConfigModel.create({
+    systemConfigModel.findOne({ })
+    .exec(function (err, systemConfig) {
+        if( !systemConfig ) {
+            systemConfigModel.create({
                 wechatOpen: {
                     ticket: newTicket
                 }
             }, callback);
         } else {
-            operatorConfig.wechatOpen.ticket = newTicket;
-            operatorConfig.save(callback);
+            systemConfig.wechatOpen.ticket = newTicket;
+            systemConfig.save(callback);
         }
     });
 }
