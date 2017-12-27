@@ -6,7 +6,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const staffSchema = new mongoose.Schema({
 
-    id:                     { type: String,             required: true, index: true, unique: true },
+    logid:                  { type: String,             required: true, index: true, unique: true },
     password:               { type: String,             required: true, set: cryptHelper.PasswordCrypt },
     name:                   { type: String,             required: true },
     createDate:             { type: Date,               default: new Date() },
@@ -24,13 +24,13 @@ const staffModel = mongoose.model('staff', staffSchema);
 
 const CheckPassword = exports.CheckPassword = (param, callback) => {
     if( !param ||
-        !param.id ||
+        !param.logid ||
         !param.password ) {
         callback(new Error('param is error'));
         return ;
     }
 
-    staffModel.findOne({ id: param.id })
+    staffModel.findOne({ logid: param.logid })
     .exec(function (err, staff) {
         if( !staff ) {
             callback(new Error('can not find staff'));
