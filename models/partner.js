@@ -1,39 +1,40 @@
 
 const mongoose = require('mongoose');
 const cryptHelper = require('../helpers/crypt');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
 const partnerSchema = new mongoose.Schema({
 
-    id: { type: String, unique: true },
-    name: String,
-    password: { type: String, set: cryptHelper.PasswordCrypt },
-    createDate: { type: Date, default: new Date() },
+    id:                     { type: String,             required: true, index: true, unique: true },
+    password:               { type: String,             required: true, set: cryptHelper.PasswordCrypt },
+    name:                   { type: String,             required: true },
+    createDate:             { type: Date,               default: new Date() },
     authId: {
-        wechatId: String
+        wechatId:           { type: String,             index: true },
     },
 
-    balance: Number,
-    payout: Number,
-    income: Number,
-    character: String, // 'DAILI', 'ZHITUI'
+    balance:                { type: Number,             required: true },
+    payout:                 { type: Number,             required: true },
+    income:                 { type: Number,             required: true },
+    character:              { type: String,             required: true }, // 'DAILI', 'ZHITUI'
 
     partnerBonus: {
-        partnerId: mongoose.Schema.Types.ObjectId
+        partnerId:          ObjectId
     },
 
     info: {
-        lastDate: { type: Date, default: new Date() },
-        loginTimes: { type: Number, default: 1 },
-        phone: String,
-        descript: String
+        lastDate:           Date,
+        loginTimes:         { type: Number,             default: 0 },
+        phone:              String,
+        descript:           String
     }
 });
 
 const partnerModel = mongoose.model('partner', partnerSchema);
 
 
-const CheckAuth = exports.CheckAuth = (param, callback) => {
+const CheckPassword = exports.CheckPassword = (param, callback) => {
     if( !param ||
         !param.id ||
         !param.password ) {

@@ -1,28 +1,27 @@
 
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
 const tradeAdSchema = new mongoose.Schema({
 
-    createDate: { type: Date, default: new Date() },
+    createDate:             { type: Date,               default: new Date() },
 
-    deviceOrderId: mongoose.Schema.Types.ObjectId,
-    userId: mongoose.Schema.Types.ObjectId,
-    adId: mongoose.Schema.Types.ObjectId,
-    aderId: mongoose.Schema.Types.ObjectId,
-    partnerId: mongoose.Schema.Types.ObjectId,
-    payout: Number,
-    income: Number,
-    type: String, //'WECHAT_MP'
-
-    partnerBonus: {
-        partnerId: mongoose.Schema.Types.ObjectId,
-        bonus: Number
-    },
+    pointOrderId:           { type: ObjectId,           required: true },
+    userId:                 { type: ObjectId,           required: true, index: true },
+    adId:                   { type: ObjectId,           required: true, index: true },
+    aderId:                 { type: ObjectId,           required: true, index: true },
+    partnerId:              { type: ObjectId,           required: true, index: true },
+    payout:                 { type: Number,             required: true },
+    income:                 { type: Number,             required: true },
 
     wechatMpInfo: {
-        openId: String,
-        event: String
+        openId:             String,
+        event:              String
+    },
+
+    wechatMpApiInfo: {
+        appid:              String
     }
 });
 

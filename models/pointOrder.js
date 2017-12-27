@@ -1,25 +1,30 @@
 
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
 const pointOrderSchema = new mongoose.Schema({
 
-    createDate: { type: Date, default: new Date() },
+    createDate:             { type: Date,               default: new Date() },
 
-    userId: mongoose.Schema.Types.ObjectId,
-    pointId: mongoose.Schema.Types.ObjectId,
-    payout: Number,
-    state: String, //'OPEN', 'PAYED', 'SUCCESS', 'FAIL'
+    userId:                 { type: ObjectId,           required: true, index: true },
+    pointId:                { type: ObjectId,           required: true, index: true },
+    payout:                 { type: Number,             required: true },
+    state:                  { type: String,             default: 'OPEN' }, //'OPEN', 'PAY', 'SUCCESS', 'FAIL'
 
     adInfo: {
-        adId: mongoose.Schema.Types.ObjectId,
-        wechatId: String
+        adId:               ObjectId,
+        wechatMpApiInfo: {
+            appid:          String,
+            qrcode_url:     String,
+            auth:           Boolean,
+        }
     },
 
     payInfo: {
-        type: String, //'AD', 'PAY'
-        tradeAdId: mongoose.Schema.Types.ObjectId,
-        tradePayId: mongoose.Schema.Types.ObjectId
+        type:               String, //'AD', 'PAY'
+        tradeAdId:          ObjectId,
+        tradePayId:         ObjectId
     }
 });
 

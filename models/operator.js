@@ -1,27 +1,28 @@
 
 const mongoose = require('mongoose');
 const cryptHelper = require('../helpers/crypt');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
 const operatorSchema = new mongoose.Schema({
 
-    email: { type: String, unique: true },
-    name: String,
-    password: { type: String, set: cryptHelper.PasswordCrypt },
-    createDate: { type: Date, default: new Date() },
+    id:                     { type: String,             required: true, index: true, unique: true },
+    password:               { type: String,             required: true, set: cryptHelper.PasswordCrypt },
+    name:                   { type: String,             required: true },
+    createDate:             { type: Date,               default: new Date() },
 
-    character: String, //'MANAGER', 'NORMAL'
+    character:              { type: String,             required: true }, //'MANAGER', 'NORMAL'
 
     info: {
-        lastDate: Date,
-        loginTimes: { type: Number, default: 0 }
+        lastDate:           Date,
+        loginTimes:         { type: Number,             default: 0 }
     }
 });
 
 const operatorModel = mongoose.model('operator', operatorSchema);
 
 
-const CheckAuth = exports.CheckAuth = (param, callback) => {
+const CheckPassword = exports.CheckPassword = (param, callback) => {
     if( !param ||
         !param.id ||
         !param.password ) {
@@ -29,7 +30,7 @@ const CheckAuth = exports.CheckAuth = (param, callback) => {
         return ;
     }
 
-    operatorModel.findOne({ email: param.id })
+    operatorModel.findOne({ id: param.id })
     .exec(function (err, operator) {
         if( !operator ) {
             callback(new Error('can not find operator'));

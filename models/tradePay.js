@@ -1,21 +1,22 @@
 
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
 const tradePaySchema = new mongoose.Schema({
 
-    createDate: { type: Date, default: new Date() },
+    createDate:             { type: Date,               default: new Date() },
 
-    deviceOrderId: mongoose.Schema.Types.ObjectId,
-    userId: mongoose.Schema.Types.ObjectId,
-    partnerId: mongoose.Schema.Types.ObjectId,
-    payout: Number,
-    income: Number,
-    type: String, //'WECHAT'
+    pointOrderId:           { type: ObjectId,           required: true },
+    userId:                 { type: ObjectId,           required: true, index: true },
+    partnerId:              { type: ObjectId,           required: true, index: true },
+    payout:                 { type: Number,             required: true },
+    income:                 { type: Number,             required: true },
+    type:                   { type: String,             required: true }, //'WECHAT'
 
     wechatInfo: {
-        transaction_id: String,
-        total_fee: Number
+        transaction_id:     String,
+        total_fee:          Number
     }
 });
 

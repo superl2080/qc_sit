@@ -1,29 +1,31 @@
 
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
 const pointSchema = new mongoose.Schema({
 
-    createDate: { type: Date, default: new Date() },
+    createDate:             { type: Date,               default: new Date() },
 
-    partnerId: mongoose.Schema.Types.ObjectId,
-    type: String, //'POINT', 'JUANZHI', 'ZHIJIN'
-    state: String, //'OPEN', 'CLOSE', 'TEST'
+    partnerId:              { type: ObjectId,           required: true, index: true },
+    type:                   { type: String,             required: true }, //'POINT', 'DEVICE'
+    state:                  { type: String,             default: 'OPEN' }, //'OPEN', 'DEPLOY', 'TEST', 'CLOSE'
 
     deviceInfo: {
-        devNo: String,
-        state: String
+        devNo:              String,
+        type:               String, //'JUANZHI', 'ZHIJIN'
+        state:              String
     },
 
     deployInfo: {
-        payout: Number,
-        name: String,
-        shop: String,
-        operatorWechatId: String
+        payout:             Number,
+        name:               String,
+        shop:               String,
+        operatorWechatId:   String
     },
 
     info: {
-        descript: String
+        descript:           String
     }
 });
 

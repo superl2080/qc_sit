@@ -1,13 +1,14 @@
 
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
 const operatorConfigSchema = new mongoose.Schema({
 
     wechatOpen: {
-        component_verify_ticket: String,
-        component_access_token: String,
-        expires_in: Date
+        ticket:             String,
+        access_token:       String,
+        expires_in:         Date
     }
 });
 
@@ -20,10 +21,10 @@ const GetTicket = exports.GetTicket = (param, callback) => {
     .exec(function (err, operatorConfig) {
         if( !operatorConfig ||
             !operatorConfig.wechatOpen ||
-            !operatorConfig.wechatOpen.component_verify_ticket ) {
-            callback(new Error('component_verify_ticket is empty'));
+            !operatorConfig.wechatOpen.ticket ) {
+            callback(new Error('ticket is empty'));
         } else {
-            callback(null, operatorConfig.wechatOpen.component_verify_ticket);
+            callback(null, operatorConfig.wechatOpen.ticket);
         }
     });
 }
@@ -36,11 +37,14 @@ const UpdateTicket = exports.UpdateTicket = (newTicket, callback) => {
 
     operatorConfigModel.findOne({ })
     .exec(function (err, operatorConfig) {
-        if( !operatorConfig ||
-            !operatorConfig.wechatOpen ) {
-            callback(new Error('operatorConfig is empty'));
+        if( !operatorConfig ) {
+            operatorConfigModel.create({
+                wechatOpen: {
+                    ticket: newTicket
+                }
+            }, callback);
         } else {
-            operatorConfig.wechatOpen.component_verify_ticket = newTicket;
+            operatorConfig.wechatOpen.ticket = newTicket;
             operatorConfig.save(callback);
         }
     });
