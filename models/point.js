@@ -29,11 +29,12 @@ const pointSchema = new mongoose.Schema({
     }
 });
 
+let pointModel = null;
 try {
-    const pointModel = mongoose.model('point', pointSchema);
+    pointModel = mongoose.model('point', pointSchema);
 } catch(err) {
     if (err.name === 'OverwriteModelError') {
-        const pointModel = mongoose.model('point');
+        pointModel = mongoose.model('point');
     }
 }
 

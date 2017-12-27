@@ -41,11 +41,12 @@ const adSchema = new mongoose.Schema({
     }
 });
 
+let adModel = null;
 try {
-    const adModel = mongoose.model('ad', adSchema);
+    adModel = mongoose.model('ad', adSchema);
 } catch(err) {
     if (err.name === 'OverwriteModelError') {
-        const adModel = mongoose.model('ad');
+        adModel = mongoose.model('ad');
     }
 }
 

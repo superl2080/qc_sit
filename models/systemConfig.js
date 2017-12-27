@@ -12,11 +12,12 @@ const systemConfigSchema = new mongoose.Schema({
     }
 });
 
+let systemConfigModel = null;
 try {
-    const systemConfigModel = mongoose.model('systemConfig', systemConfigSchema);
+    systemConfigModel = mongoose.model('systemConfig', systemConfigSchema);
 } catch(err) {
     if (err.name === 'OverwriteModelError') {
-        const systemConfigModel = mongoose.model('systemConfig');
+        systemConfigModel = mongoose.model('systemConfig');
     }
 }
 

@@ -20,11 +20,12 @@ const tradePaySchema = new mongoose.Schema({
     }
 });
 
+let tradePayModel = null;
 try {
-    const tradePayModel = mongoose.model('tradePay', tradePaySchema);
+    tradePayModel = mongoose.model('tradePay', tradePaySchema);
 } catch(err) {
     if (err.name === 'OverwriteModelError') {
-        const tradePayModel = mongoose.model('tradePay');
+        tradePayModel = mongoose.model('tradePay');
     }
 }
 

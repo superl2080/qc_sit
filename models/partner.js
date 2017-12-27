@@ -31,11 +31,12 @@ const partnerSchema = new mongoose.Schema({
     }
 });
 
+let partnerModel = null;
 try {
-    const partnerModel = mongoose.model('partner', partnerSchema);
+    partnerModel = mongoose.model('partner', partnerSchema);
 } catch(err) {
     if (err.name === 'OverwriteModelError') {
-        const partnerModel = mongoose.model('partner');
+        partnerModel = mongoose.model('partner');
     }
 }
 

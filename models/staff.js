@@ -19,11 +19,12 @@ const staffSchema = new mongoose.Schema({
     }
 });
 
+let staffModel = null;
 try {
-    const staffModel = mongoose.model('staff', staffSchema);
+    staffModel = mongoose.model('staff', staffSchema);
 } catch(err) {
     if (err.name === 'OverwriteModelError') {
-        const staffModel = mongoose.model('staff');
+        staffModel = mongoose.model('staff');
     }
 }
 

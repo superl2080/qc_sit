@@ -18,11 +18,12 @@ const aderSchema = new mongoose.Schema({
     }
 });
 
+let aderModel = null;
 try {
-    const aderModel = mongoose.model('ader', aderSchema);
+    aderModel = mongoose.model('ader', aderSchema);
 } catch(err) {
     if (err.name === 'OverwriteModelError') {
-        const aderModel = mongoose.model('ader');
+        aderModel = mongoose.model('ader');
     }
 }
 

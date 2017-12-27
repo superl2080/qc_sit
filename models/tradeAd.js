@@ -25,11 +25,12 @@ const tradeAdSchema = new mongoose.Schema({
     }
 });
 
+let tradeAdModel = null;
 try {
-    const tradeAdModel = mongoose.model('tradeAd', tradeAdSchema);
+    tradeAdModel = mongoose.model('tradeAd', tradeAdSchema);
 } catch(err) {
     if (err.name === 'OverwriteModelError') {
-        const tradeAdModel = mongoose.model('tradeAd');
+        tradeAdModel = mongoose.model('tradeAd');
     }
 }
 
