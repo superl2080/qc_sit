@@ -75,3 +75,13 @@ const CreateAuthAd = exports.CreateAuthAd = (param, callback) => {
         }, callback);
     });
 }
+
+const UpdateAd = exports.UpdateAd = (param, callback) => {
+    if( !param ||
+        !param.adId ) {
+        callback(new Error('param is error'));
+        return ;
+    }
+
+    adModel.findById(param.adId, callback);
+}
