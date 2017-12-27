@@ -23,5 +23,11 @@ var userSchema = new mongoose.Schema({
     }
 });
 
-const userModel = mongoose.model('user', userSchema);
+try {
+    const userModel = mongoose.model('user', userSchema);
+} catch(err) {
+    if (err.name === 'OverwriteModelError') {
+        const userModel = mongoose.model('user');
+    }
+}
 

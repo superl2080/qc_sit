@@ -19,7 +19,13 @@ const staffSchema = new mongoose.Schema({
     }
 });
 
-const staffModel = mongoose.model('staff', staffSchema);
+try {
+    const staffModel = mongoose.model('staff', staffSchema);
+} catch(err) {
+    if (err.name === 'OverwriteModelError') {
+        const staffModel = mongoose.model('staff');
+    }
+}
 
 
 const CheckPassword = exports.CheckPassword = (param, callback) => {

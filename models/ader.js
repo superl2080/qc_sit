@@ -18,7 +18,13 @@ const aderSchema = new mongoose.Schema({
     }
 });
 
-const aderModel = mongoose.model('ader', aderSchema);
+try {
+    const aderModel = mongoose.model('ader', aderSchema);
+} catch(err) {
+    if (err.name === 'OverwriteModelError') {
+        const aderModel = mongoose.model('ader');
+    }
+}
 
 
 const GetHaveBalanceAders = exports.GetHaveBalanceAders = (param, callback) => {

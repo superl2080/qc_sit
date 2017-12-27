@@ -41,7 +41,13 @@ const adSchema = new mongoose.Schema({
     }
 });
 
-const adModel = mongoose.model('ad', adSchema);
+try {
+    const adModel = mongoose.model('ad', adSchema);
+} catch(err) {
+    if (err.name === 'OverwriteModelError') {
+        const adModel = mongoose.model('ad');
+    }
+}
 
 
 const CreateAuthAd = exports.CreateAuthAd = (param, callback) => {
@@ -57,7 +63,7 @@ const CreateAuthAd = exports.CreateAuthAd = (param, callback) => {
             callback(new Error('ader is not OK'));
             return ;
         }
-        
+
         adModel.create({ 
             aderId: param.aderId,
             type: 'WECHAT_MP_AUTH',

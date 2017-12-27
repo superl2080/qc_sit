@@ -20,5 +20,11 @@ const tradePaySchema = new mongoose.Schema({
     }
 });
 
-const tradePayModel = mongoose.model('tradePay', tradePaySchema);
+try {
+    const tradePayModel = mongoose.model('tradePay', tradePaySchema);
+} catch(err) {
+    if (err.name === 'OverwriteModelError') {
+        const tradePayModel = mongoose.model('tradePay');
+    }
+}
 

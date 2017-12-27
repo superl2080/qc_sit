@@ -28,5 +28,11 @@ const pointOrderSchema = new mongoose.Schema({
     }
 });
 
-const pointOrderModel = mongoose.model('pointOrder', pointOrderSchema);
+try {
+    const pointOrderModel = mongoose.model('pointOrder', pointOrderSchema);
+} catch(err) {
+    if (err.name === 'OverwriteModelError') {
+        const pointOrderModel = mongoose.model('pointOrder');
+    }
+}
 

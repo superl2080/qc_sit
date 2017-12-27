@@ -12,7 +12,13 @@ const systemConfigSchema = new mongoose.Schema({
     }
 });
 
-const systemConfigModel = mongoose.model('systemConfig', systemConfigSchema);
+try {
+    const systemConfigModel = mongoose.model('systemConfig', systemConfigSchema);
+} catch(err) {
+    if (err.name === 'OverwriteModelError') {
+        const systemConfigModel = mongoose.model('systemConfig');
+    }
+}
 
 
 const GetTicket = exports.GetTicket = (param, callback) => {

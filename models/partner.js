@@ -31,7 +31,13 @@ const partnerSchema = new mongoose.Schema({
     }
 });
 
-const partnerModel = mongoose.model('partner', partnerSchema);
+try {
+    const partnerModel = mongoose.model('partner', partnerSchema);
+} catch(err) {
+    if (err.name === 'OverwriteModelError') {
+        const partnerModel = mongoose.model('partner');
+    }
+}
 
 
 const CheckPassword = exports.CheckPassword = (param, callback) => {
