@@ -38,8 +38,7 @@ const GetWechatOpen = exports.GetWechatOpen = (param, callback) => {
 
 const UpdateWechatOpenTicket = exports.UpdateWechatOpenTicket = (newTicket, callback) => {
     if( !newTicket ) {
-        callback(new Error('UpdateWechatOpenTicket: newTicket is empty'));
-        return ;
+        return callback(new Error('UpdateWechatOpenTicket: newTicket is empty'));
     }
 
     systemConfigModel.findOne({ })
@@ -62,8 +61,7 @@ const UpdateWechatOpenToken = exports.UpdateWechatOpenToken = (param, callback) 
     if( !param
         || !param.access_token
         || !param.expires_in ) {
-        callback(new Error('UpdateWechatOpenToken: param is error'));
-        return ;
+        return callback(new Error('UpdateWechatOpenToken: param is error'));
     }
 
     systemConfigModel.findOne({ })

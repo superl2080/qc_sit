@@ -156,7 +156,7 @@ const CancelWechatMpAuthInfo = exports.CancelWechatMpAuthInfo = (param, callback
 const GetOpenToken = exports.GetOpenToken = (param, callback) => {
     console.log('[CALL] GetOpenToken');
 
-    systemConfigModel.GetWechatOpen(function (err, wechatOpen) {
+    systemConfigModel.GetWechatOpen(null, (err, wechatOpen) => {
         if( err ) {
             console.log('[CALLBACK] GetOpenToken');
             callback(err);
@@ -324,7 +324,7 @@ const GetMpToken = exports.GetMpToken = (param, callback) => {
         return callback(new Error('param is error'));
     }
     
-    adModel.GetWechatOpen(function (err, wechatOpen) {
+    adModel.GetWechatOpen(null, (err, wechatOpen) => {
         if( err ) {
             console.log('[CALLBACK] GetMpToken');
             callback(err);
