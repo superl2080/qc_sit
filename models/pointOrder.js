@@ -23,6 +23,7 @@ const pointOrderSchema = new mongoose.Schema({
 
     payInfo: {
         type:               String, //'AD', 'PAY'
+        lastDate:           Date,
         tradeAdId:          ObjectId,
         tradePayId:         ObjectId
     }
