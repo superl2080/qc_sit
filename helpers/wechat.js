@@ -192,9 +192,9 @@ const GetOpenToken = exports.GetOpenToken = (param, callback) => {
                     systemConfigModel.UpdateWechatOpenToken({
                         access_token: body.component_access_token,
                         expires_in: CreateExpiresInDate(body.expires_in)
-                    }, function (err, newWechatOpen) {
+                    }, function (err, systemConfig) {
                         console.log('[CALLBACK] GetOpenToken');
-                        callback(err, newWechatOpen.access_token);
+                        callback(err, body.component_access_token);
                     });
                 }
             });
