@@ -97,7 +97,7 @@ const UpdateWechatMpPreAuthCode = exports.UpdateWechatMpPreAuthCode = (param, ca
         return ;
     }
 
-    adModel.findOneById(param.adId)
+    adModel.findById(param.adId)
     .exec(function (err, ad) {
         if( err
             || !ad
