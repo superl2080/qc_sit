@@ -89,11 +89,11 @@ const GetAdById = exports.GetAdById = (param, callback) => {
     adModel.findById(param.adId, callback);
 }
 
-const UpdateWechatMpPreAuthCode = exports.UpdateAdPreAuthCode = (param, callback) => {
+const UpdateWechatMpPreAuthCode = exports.UpdateWechatMpPreAuthCode = (param, callback) => {
     if( !param
         || !param.adId
         || !param.pre_auth_code ) {
-        callback(new Error('UpdateAdPreAuthCode: param is error'));
+        callback(new Error('UpdateWechatMpPreAuthCode: param is error'));
         return ;
     }
 
@@ -103,7 +103,7 @@ const UpdateWechatMpPreAuthCode = exports.UpdateAdPreAuthCode = (param, callback
             || !ad
             || ad.type != 'WECHAT_MP_AUTH'
             || ad.state != 'CREATE' ) {
-            callback(new Error('UpdateAdPreAuthCode: adId is error'));
+            callback(new Error('UpdateWechatMpPreAuthCode: adId is error'));
         } else {
             if( !ad.wechatMpAuthInfo ) {
                 ad.wechatMpAuthInfo = {
