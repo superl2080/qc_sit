@@ -241,8 +241,8 @@ const GetMpAuthInfo = exports.GetMpAuthInfo = (param, callback) => {
     console.log('[CALL] GetMpAuthInfo');
 
     if( !param
-        !! !param.access_token
-        !! !param.auth_Code ) {
+        || !param.access_token
+        || !param.auth_Code ) {
         console.log('[CALLBACK] GetMpAuthInfo');
         return callback(new Error('param is error'));
     }
@@ -279,8 +279,8 @@ const GetMpInfo = exports.GetMpInfo = (param, callback) => {
     console.log('[CALL] GetMpInfo');
 
     if( !param
-        !! !param.access_token
-        !! !param.appid ) {
+        || !param.access_token
+        || !param.appid ) {
         console.log('[CALLBACK] GetMpInfo');
         return callback(new Error('param is error'));
     }
