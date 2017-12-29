@@ -61,8 +61,7 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
         Pre: (callback) => {
             console.log('[CALL] UpdateWechatMpAuthInfo, Pre');
             if( !param
-                || !param.appid
-                || !param.auth_Code
+                || !param.auth_code
                 || !param.pre_auth_code ){
                 callback(new Error('UpdateWechatMpAuthInfo: param is error'));
             } else {
@@ -79,7 +78,7 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
             console.log('[CALL] UpdateWechatMpAuthInfo, GetMpAuthInfo');
             GetMpAuthInfo({
                 access_token: result.GetOpenToken,
-                auth_Code: result.Pre.auth_Code
+                auth_code: result.Pre.auth_code
             }, callback);
         }],
 
@@ -89,7 +88,7 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
                 if( element.funcscope_category.id == 1 ){
                     return GetMpInfo({
                         access_token: result.GetOpenToken,
-                        appid: result.Pre.appid
+                        appid: result.GetMpAuthInfo.authorizer_appid
                     }, callback);
                 }
             });
@@ -108,7 +107,7 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
                 });
             }
             adModel.UpdateWechatMpAuthInfo({
-                appid: result.Pre.appid,
+                appid: result.GetMpAuthInfo.authorizer_appid,
                 pre_auth_code: result.Pre.pre_auth_code,
                 qrcode_url: result.GetMpInfo.qrcode_url,
                 auth: auth,
@@ -242,7 +241,7 @@ const GetMpAuthInfo = exports.GetMpAuthInfo = (param, callback) => {
 
     if( !param
         || !param.access_token
-        || !param.auth_Code ) {
+        || !param.auth_code ) {
         console.log('[CALLBACK] GetMpAuthInfo');
         return callback(new Error('param is error'));
     }
@@ -255,7 +254,7 @@ const GetMpAuthInfo = exports.GetMpAuthInfo = (param, callback) => {
         },
         json: {
             component_appid: WECHAT_OPEN_APP_ID,
-            authorization_code: param.auth_Code
+            authorization_code: param.auth_code
         }
     };
 
