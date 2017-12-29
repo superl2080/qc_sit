@@ -125,8 +125,11 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
         return callback(new Error('UpdateWechatMpAuthInfo: param is error'));
     }
 
-    adModel.findOne({ 'wechatMpAuthInfo.appid': param.appid, state: { $in: ['OPEN', 'DELIVER'] } })
-    .exec(function (err, ad) {
+    adModel.findOne({ 
+        'wechatMpAuthInfo.appid': param.appid,
+        'wechatMpAuthInfo.pre_auth_code': { $ne: param.pre_auth_code},
+        state: { $in: ['OPEN', 'DELIVER'] } 
+    }).exec(function (err, ad) {
         if( err
             || !ad ) {
             adModel.findOne({ 'wechatMpAuthInfo.pre_auth_code': param.pre_auth_code })
