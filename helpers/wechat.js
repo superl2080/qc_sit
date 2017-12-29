@@ -160,7 +160,7 @@ const GetOpenToken = exports.GetOpenToken = (param, callback) => {
             console.log('[CALLBACK] GetOpenToken');
             callback(err);
         } else if( wechatOpen.access_token
-            && Date() < wechatOpen.expires_in ) {
+            && CheckExpiresInDate(wechatOpen.expires_in) ) {
             console.log('[CALLBACK] GetOpenToken');
             callback(null, wechatOpen.access_token);
         } else {
@@ -328,7 +328,7 @@ const GetMpToken = exports.GetMpToken = (param, callback) => {
             console.log('[CALLBACK] GetMpToken');
             callback(err);
         } else if( wechatOpen.access_token
-            && Date() < wechatOpen.expires_in ) {
+            && CheckExpiresInDate(wechatOpen.expires_in) ) {
             console.log('[CALLBACK] GetMpToken');
             callback(null, wechatOpen.access_token);
         } else {
@@ -374,6 +374,11 @@ const CreateExpiresInDate = exports.CreateExpiresInDate = (expires_in) => {
     let expiresInDate = new Date();
     expiresInDate.setTime(expiresInDate.getTime() + expires_in * 1000 - 5 * 60 * 1000);
     return expiresInDate;
+}
+
+const CheckExpiresInDate = exports.CheckExpiresInDate = (expiresInDate) => {
+    let currentDate = new Date();
+    return currentDate.getTime() < expiresInDate.getTime();
 }
 
 const Decrypt = exports.Decrypt = (msgEncrypt) => {
