@@ -86,7 +86,8 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
             console.log('[CALL] UpdateWechatMpAuthInfo, GetMpInfo');
             let haveFuncscope = false;
             result.GetMpAuthInfo.func_info.forEach((element) => {
-                if( element.funcscope_category.id == 1 ){
+                if( !haveFuncscope
+                    && element.funcscope_category.id == 1 ){
                     haveFuncscope = true;
                     GetMpInfo({
                         access_token: result.GetOpenToken,
@@ -95,7 +96,9 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
                 }
             });
             if( !haveFuncscope ) {
-                callback(new Error('UpdateWechatMpAuthInfo: do not have funcscope'));
+                adModel.CancelAdWechatMpAuthInfo(result.GetMpAuthInfo.authorizer_appid, (err, result) => {
+                    callback(new Error('UpdateWechatMpAuthInfo: do not have funcscope'));
+                });
             }
         }],
 
