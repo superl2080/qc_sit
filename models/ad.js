@@ -56,8 +56,7 @@ try {
 const CreateAuthAd = exports.CreateAuthAd = (param, callback) => {
     if( !param
         || !param.aderId ) {
-        callback(new Error('CreateAuthAd: param is error'));
-        return ;
+        returncallback(new Error('CreateAuthAd: param is error'));
     }
 
     aderModel.GetAderById({ aderId: param.aderId }, (err, ader) => {
@@ -82,8 +81,7 @@ const CreateAuthAd = exports.CreateAuthAd = (param, callback) => {
 const GetAdById = exports.GetAdById = (param, callback) => {
     if( !param
         || !param.adId ) {
-        callback(new Error('GetAdById: param is error'));
-        return ;
+        return callback(new Error('GetAdById: param is error'));
     }
 
     adModel.findById(param.adId, callback);
@@ -93,8 +91,7 @@ const UpdateWechatMpPreAuthCode = exports.UpdateWechatMpPreAuthCode = (param, ca
     if( !param
         || !param.adId
         || !param.pre_auth_code ) {
-        callback(new Error('UpdateWechatMpPreAuthCode: param is error'));
-        return ;
+        return callback(new Error('UpdateWechatMpPreAuthCode: param is error'));
     }
 
     adModel.findById(param.adId)
@@ -122,17 +119,10 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
         || !param.appid
         || !param.pre_auth_code
         || !param.qrcode_url
-        || !param.auth
-        || !param.service_type
-        || !param.verify_type
         || !param.access_token
         || !param.expires_in
-        || !param.refresh_token
-        || !param.nick_name
-        || !param.head_img
-        || !param.user_name ) {
-        callback(new Error('UpdateWechatMpAuthInfo: param is error'));
-        return ;
+        || !param.refresh_token ) {
+        return callback(new Error('UpdateWechatMpAuthInfo: param is error'));
     }
 
     adModel.findOne({ 'wechatMpAuthInfo.appid': param.appid, state: { $in: ['OPEN', 'DELIVER'] } })
