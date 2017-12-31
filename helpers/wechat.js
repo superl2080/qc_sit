@@ -53,9 +53,9 @@ const CreatePreAuthCode = exports.CreatePreAuthCode = (adId, callback) => {
             }, callback);
         }]
 
-    }, (err, results) => {
+    }, (err, result) => {
         console.log('[CALLBACK] CreatePreAuthCode');
-        callback(err, results.GetPreAuthCode.pre_auth_code);
+        callback(err, result.GetPreAuthCode.pre_auth_code);
     });
 }
 
@@ -133,7 +133,7 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
             }, callback);
         }]
 
-    }, (err, results) => {
+    }, (err, result) => {
         console.log('[CALLBACK] UpdateWechatMpAuthInfo');
         callback(err);
     });
@@ -157,7 +157,7 @@ const CancelWechatMpAuthInfo = exports.CancelWechatMpAuthInfo = (param, callback
             adModel.CancelAdWechatMpAuthInfo(result.Pre.appid, callback);
         }]
 
-    }, (err, results) => {
+    }, (err, result) => {
         console.log('[CALLBACK] CancelWechatMpAuthInfo');
         callback(err);
     });
@@ -239,9 +239,9 @@ const AdSubscribe = exports.AdSubscribe = (param, callback) => {
             }
         }]
 
-    }, (err, results) => {
+    }, (err, result) => {
         console.log('[CALLBACK] AdSubscribe');
-        callback(err, results.GetPreAuthCode.pre_auth_code);
+        callback(err, result.GetPreAuthCode.pre_auth_code);
     });
 }
 
