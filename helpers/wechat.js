@@ -7,7 +7,6 @@ const systemConfigModel = require('../models/systemConfig');
 const pointOrderModel = require('../models/pointOrder');
 const wechatApi = require('../api/wechat');
 const deviceApi = require('../api/device');
-const cryptHelper = require('./crypt');
 const toolHelper = require('./tool');
 
 const CRYPTO_AES_KEY = new Buffer(process.env.WECHAT_OPEN_ENCODE_KEY + '=', 'base64');
@@ -334,69 +333,5 @@ const GetMpToken = exports.GetMpToken = (param, callback) => {
     });
 }*/
 
-
-const EncryptMsg = exports.EncryptMsg = (param) => {
-    console.log('[CALL] EncryptMsg, param:');
-    console.log(param);
-    
-    const msgXml = cryptHelper.GetXmlFromJson(param.msg);
-    const encryptData = Encrypt(msgXml);
-    const msgSignatureArray = new Array(
-        param.token, 
-        param.timestamp, 
-        param.nonce, 
-        encryptData
-    );
-    const msgEncryptJson = {
-        Encrypt: encryptData,
-        MsgSignature: cryptHelper.EncryptSha1(msgSignatureArray.sort().join('')),
-        TimeStamp: param.timestamp,
-        Nonce: param.nonce
-    };
-    return cryptHelper.GetXmlFromJson(msgEncryptJson);
-};
-
-const Decrypt = exports.Decrypt = (msgEncrypt) => {
-    console.log('[CALL] Decrypt, msgEncrypt:');
-    console.log(msgEncrypt);
-
-    if( !msgEncrypt ) {
-        return new Error('msgEncrypt is empty');
-    }
-
-    let decipheredBuff = cryptHelper.DecryptAes256Cbc({ data: msgEncrypt, aesKey: CRYPTO_AES_KEY, aesIv: CRYPTO_IV });
-    decipheredBuff = cryptHelper.DecodePKCS7(decipheredBuff);
-
-    let msg = decipheredBuff.slice(16);
-    let msg_len = msg.slice(0, 4).readUInt32BE(0);
-    let msg_content = msg.slice(4, msg_len + 4).toString('utf-8');
-    let msg_appId =msg.slice(msg_len + 4).toString('utf-8');
-
-    console.log('[CALLBACK] Decrypt, msg_content:');
-    console.log(msg_content);
-    return msg_content;
-};
-
-const Encrypt = exports.Encrypt = (msgDecrypt) => {
-    console.log('[CALL] Encrypt, msgDecrypt:');
-    console.log(msgDecrypt);
-
-    if( !msgDecrypt ) {
-        return new Error('msgDecrypt is empty');
-    }
-
-    let random16 = cryptHelper.RandomBytes(16);
-    let msg_content = new Buffer(msgDecrypt);
-    let msg_len = new Buffer(4);
-    msg_len.writeUInt32BE(msg_content.length, 0);
-    let msg_appId = new Buffer(process.env.WECHAT_OPEN_APP_ID);
-    let raw_msg = Buffer.concat([random16, msg_len, msg_content, msg_appId]);
-
-    let msgEncrypt = cryptHelper.EncryptAes256Cbc({ data: raw_msg, aesKey: CRYPTO_AES_KEY, aesIv: CRYPTO_IV });
-
-    console.log('[CALLBACK] Encrypt, msgEncrypt:');
-    console.log(msgEncrypt);
-    return msgEncrypt;
-};
 
 
