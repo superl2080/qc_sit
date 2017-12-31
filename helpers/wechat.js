@@ -392,7 +392,6 @@ const Encrypt = exports.Encrypt = (msgDecrypt) => {
     let msg_appId = new Buffer(process.env.WECHAT_OPEN_APP_ID);
     let raw_msg = Buffer.concat([random16, msg_len, msg_content, msg_appId]);
 
-    raw_msg = cryptHelper.EncodePKCS7(raw_msg);
     let msgEncrypt = cryptHelper.EncryptAes256Cbc({ data: raw_msg, aesKey: CRYPTO_AES_KEY, aesIv: CRYPTO_IV });
 
     console.log('[CALLBACK] Encrypt, msgEncrypt:');
