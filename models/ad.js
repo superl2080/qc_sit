@@ -6,20 +6,20 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const adSchema = new mongoose.Schema({
 
-    createDate:             { type: Date,               default: new Date() },
+    createDate:             { $type: Date,               default: new Date() },
 
-    isDefault:              { type: Boolean,            default: false },
-    aderId:                 { type: ObjectId,           required: true, index: true },
-    type:                   { type: String,             required: true }, //'WECHAT_MP_AUTH', 'WECHAT_MP_API'
-    state:                  { type: String,             default: 'CREATE' }, //'CREATE', 'OPEN', 'DELIVER', 'SUCESS', 'REPEAT', 'CANCEL'
+    isDefault:              { $type: Boolean,            default: false },
+    aderId:                 { $type: ObjectId,           required: true, index: true },
+    type:                   { $type: String,             required: true }, //'WECHAT_MP_AUTH', 'WECHAT_MP_API'
+    state:                  { $type: String,             default: 'CREATE' }, //'CREATE', 'OPEN', 'DELIVER', 'SUCESS', 'REPEAT', 'CANCEL'
 
     deliverInfo: {
-        payout:             { type: Number,             required: true },
-        income:             { type: Number,             required: true },
+        payout:             { $type: Number,             required: true },
+        income:             { $type: Number,             required: true },
         count:              Number,
-        partnerType:        { type: String,             default: 'ALL' }, //'ALL', 'WHITE', 'BLACK'
+        partnerType:        { $type: String,             default: 'ALL' }, //'ALL', 'WHITE', 'BLACK'
         partnerIds:         [ ObjectId ],
-        userType:           { type: String,             default: 'ALL' }, //'ALL', 'WHITE', 'BLACK'
+        userType:           { $type: String,             default: 'ALL' }, //'ALL', 'WHITE', 'BLACK'
         userTags:           [ String ]
     },
 
@@ -41,7 +41,7 @@ const adSchema = new mongoose.Schema({
     wechatMpApiInfo: {
         channel:            String //'YOUFENTONG', 'YUNDAI'
     }
-});
+}, { typeKey: '$type' });
 
 let adModel = null;
 try {

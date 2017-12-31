@@ -6,18 +6,18 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const staffSchema = new mongoose.Schema({
 
-    logid:                  { type: String,             required: true, index: true, unique: true },
-    password:               { type: String,             required: true, set: cryptHelper.PasswordCrypt },
-    name:                   { type: String,             required: true },
-    createDate:             { type: Date,               default: new Date() },
+    logid:                  { $type: String,             required: true, index: true, unique: true },
+    password:               { $type: String,             required: true, set: cryptHelper.PasswordCrypt },
+    name:                   { $type: String,             required: true },
+    createDate:             { $type: Date,               default: new Date() },
 
-    character:              { type: String,             required: true }, //'MANAGER', 'NORMAL'
+    character:              { $type: String,             required: true }, //'MANAGER', 'NORMAL'
 
     info: {
         lastDate:           Date,
-        loginTimes:         { type: Number,             default: 0 }
+        loginTimes:         { $type: Number,             default: 0 }
     }
-});
+}, { typeKey: '$type' });
 
 let staffModel = null;
 try {

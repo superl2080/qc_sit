@@ -11,7 +11,7 @@ const systemConfigSchema = new mongoose.Schema({
         expires_in:         Date,
         auto_reply:         String
     }
-});
+}, { typeKey: '$type' });
 
 let systemConfigModel = null;
 try {

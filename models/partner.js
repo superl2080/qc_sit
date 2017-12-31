@@ -6,18 +6,18 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const partnerSchema = new mongoose.Schema({
 
-    logid:                  { type: String,             required: true, index: true, unique: true },
-    password:               { type: String,             required: true, set: cryptHelper.PasswordCrypt },
-    name:                   { type: String,             required: true },
-    createDate:             { type: Date,               default: new Date() },
+    logid:                  { $type: String,             required: true, index: true, unique: true },
+    password:               { $type: String,             required: true, set: cryptHelper.PasswordCrypt },
+    name:                   { $type: String,             required: true },
+    createDate:             { $type: Date,               default: new Date() },
     authId: {
-        wechatId:           { type: String,             index: true },
+        wechatId:           { $type: String,             index: true },
     },
 
-    isDefault:              { type: Boolean,            default: false },
-    balance:                { type: Number,             required: true },
-    income:                 { type: Number,             required: true },
-    character:              { type: String,             required: true }, // 'DAILI', 'ZHITUI'
+    isDefault:              { $type: Boolean,            default: false },
+    balance:                { $type: Number,             required: true },
+    income:                 { $type: Number,             required: true },
+    character:              { $type: String,             required: true }, // 'DAILI', 'ZHITUI'
 
     partnerBonus: {
         partnerId:          ObjectId
@@ -25,11 +25,11 @@ const partnerSchema = new mongoose.Schema({
 
     info: {
         lastDate:           Date,
-        loginTimes:         { type: Number,             default: 0 },
+        loginTimes:         { $type: Number,             default: 0 },
         phone:              String,
         descript:           String
     }
-});
+}, { typeKey: '$type' });
 
 let partnerModel = null;
 try {

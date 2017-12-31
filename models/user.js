@@ -5,14 +5,14 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 var userSchema = new mongoose.Schema({
 
-    createDate:             { type: Date,               default: new Date() },
+    createDate:             { $type: Date,               default: new Date() },
     authId: {
-        wechatId:           { type: String,             index: true },
+        wechatId:           { $type: String,             index: true },
     },
     
     info: {
-        lastDate:           { type: Date,               default: new Date() },
-        loginTimes:         { type: Number,             default: 1 },
+        lastDate:           { $type: Date,               default: new Date() },
+        loginTimes:         { $type: Number,             default: 1 },
         signType:           String, //'WECHAT'
         nickname:           String,
         sex:                Number, // 0: none, 1: male, 2: female
@@ -21,7 +21,7 @@ var userSchema = new mongoose.Schema({
         country:            String,
         tags:               [String]
     }
-});
+}, { typeKey: '$type' });
 
 let userModel = null;
 try {
