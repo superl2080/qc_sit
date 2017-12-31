@@ -54,7 +54,7 @@ const UpdateZhijinji = exports.UpdateZhijinji = (param, callback) => {
         || !param.type
         || !param.state
         || !param.partnerId ) {
-        returncallback(new Error('UpdateZhijinji: param is error'));
+        return callback(new Error('UpdateZhijinji: param is error'));
     }
 
     pointModel.findOne({ 'deviceInfo.devNo': param.devNo }, (err, point) => {
