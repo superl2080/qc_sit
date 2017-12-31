@@ -62,6 +62,10 @@ const CheckPassword = exports.CheckPassword = (param, callback) => {
     });
 }
 
+const GetDefaultPartner = exports.GetDefaultPartner = (param, callback) => {
+    partnerModel.findOne({ isDefault: true }, callback);
+}
+
 const PartnerIncome = exports.PartnerIncome = (param, callback) => {
     if( !param ||
         !param.partnerId ||

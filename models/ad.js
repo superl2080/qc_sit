@@ -78,6 +78,10 @@ const CreateAuthAd = exports.CreateAuthAd = (param, callback) => {
     });
 }
 
+const GetDefaultAd = exports.GetDefaultAd = (param, callback) => {
+    adModel.findOne({ isDefault: true }, callback);
+}
+
 const GetAdById = exports.GetAdById = (param, callback) => {
     if( !param
         || !param.adId ) {

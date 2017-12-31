@@ -47,3 +47,32 @@ const GetPointById = exports.GetPointById = (param, callback) => {
 
     pointModel.findById(param.pointId, callback);
 }
+
+const UpdateZhijinji = exports.UpdateZhijinji = (param, callback) => {
+    if( !param
+        || !param.devNo
+        || !param.type
+        || !param.state
+        || !param.partnerId ) {
+        returncallback(new Error('UpdateZhijinji: param is error'));
+    }
+
+    pointModel.findOne({ 'deviceInfo.devNo': param.devNo }, (err, point) => {
+        if( err
+            || !point ) {
+            pointModel.create({ 
+                partnerId: param.partnerId,
+                type: 'ZHIJINJI',
+                deviceInfo: {
+                    devNo: param.devNo,
+                    type: param.type,
+                    state: param.state
+                }
+            }, callback);
+        } else {
+            point.deviceInfo.type = param.type;
+            point.deviceInfo.state = param.state;
+            point.save(callback);
+        }
+    });
+}
