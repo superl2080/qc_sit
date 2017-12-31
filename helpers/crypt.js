@@ -53,7 +53,6 @@ const DecryptAes256Cbc = exports.DecryptAes256Cbc = (param) => {
 const EncryptAes256Cbc = exports.EncryptAes256Cbc = (param) => {
 
     const cipher = crypto.createCipheriv('aes-256-cbc', param.aesKey, param.aesIv);
-    cipher.setAutoPadding(false);
     return Buffer.concat([cipher.update(param.data), cipher.final()]).toString('base64');
 }
 

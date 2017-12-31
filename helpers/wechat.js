@@ -240,7 +240,7 @@ const AdSubscribe = exports.AdSubscribe = (param, callback) => {
 
     }, (err, result) => {
         console.log('[CALLBACK] AdSubscribe');
-        callback(err, result.GetPreAuthCode.pre_auth_code);
+        callback(err);
     });
 }
 
@@ -339,7 +339,7 @@ const EncryptMsg = exports.EncryptMsg = (param) => {
     console.log('[CALL] EncryptMsg, param:');
     console.log(param);
     
-    const msgXml = cryptHelper.GetXmlFromJson(param.xml);
+    const msgXml = cryptHelper.GetXmlFromJson(param.msg);
     const encryptData = Encrypt(msgXml);
     const msgSignatureArray = new Array(
         param.token, 
@@ -350,7 +350,7 @@ const EncryptMsg = exports.EncryptMsg = (param) => {
     const msgEncryptJson = {
         xml: {
             Encrypt: encryptData,
-            MsgSignature: cryptHelper.EncryptSha1(msgSignatureArray.sort()),
+            MsgSignature: cryptHelper.EncryptSha1(msgSignatureArray.sort().join('')),
             TimeStamp: param.timestamp,
             Nonce: param.nonce
         }
