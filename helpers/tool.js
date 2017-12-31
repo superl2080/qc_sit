@@ -2,6 +2,10 @@
 const request = require('request');
 
 
+const MakeCData = exports.MakeCData = (str) => {
+    return '<![CDATA[' + str + ']]>';
+}
+
 const CreateExpiresInDate = exports.CreateExpiresInDate = (expires_in) => {
     let expiresInDate = new Date();
     expiresInDate.setTime(expiresInDate.getTime() + expires_in * 1000 - 5 * 60 * 1000);
