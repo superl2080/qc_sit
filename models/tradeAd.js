@@ -34,3 +34,39 @@ try {
     }
 }
 
+
+const CreateTradeAd = exports.CreateTradeAd = (param, callback) => {
+    if( !param
+        || !param.pointOrderId
+        || !param.userId
+        || !param.adId
+        || !param.aderId
+        || !param.partnerId
+        || !param.payout
+        || !param.income ) {
+        returncallback(new Error('CreateTradeAd: param is error'));
+    }
+
+    let newTradeAd = { 
+        pointOrderId: param.pointOrderId,
+        userId: param.userId,
+        adId: param.adId,
+        aderId: param.aderId,
+        partnerId: param.partnerId,
+        payout: param.payout,
+        income: param.income,
+    };
+    if( param.openId
+        && param.event ) {
+        newTradeAd.wechatMpInfo = {
+            openId: param.openId,
+            event: param.event
+        }
+    }
+    if( param.appid ) {
+        newTradeAd.wechatMpApiInfo = {
+            appid: param.appid
+        }
+    }
+    tradeAdModel.create(newTradeAd, callback);
+}

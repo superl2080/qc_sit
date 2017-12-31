@@ -8,7 +8,8 @@ const systemConfigSchema = new mongoose.Schema({
     wechatOpen: {
         ticket:             String,
         access_token:       String,
-        expires_in:         Date
+        expires_in:         Date,
+        auto_reply:         String
     }
 });
 

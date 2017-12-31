@@ -10,7 +10,7 @@ const pointOrderSchema = new mongoose.Schema({
     userId:                 { type: ObjectId,           required: true, index: true },
     pointId:                { type: ObjectId,           required: true, index: true },
     payout:                 { type: Number,             required: true },
-    state:                  { type: String,             default: 'OPEN' }, //'OPEN', 'PAY', 'SUCCESS', 'FAIL'
+    state:                  { type: String,             default: 'OPEN' }, //'OPEN', 'SUCCESS', 'FAIL'
 
     adInfo: {
         adId:               ObjectId,
@@ -38,3 +38,40 @@ try {
     }
 }
 
+
+const SubscribePointOrder = exports.SubscribePointOrder = (param, callback) => {
+    if( !param
+        || !param.userId
+        || !param.appid ) {
+        return callback(new Error('SubscribePointOrder: param is error'));
+    }
+
+    pointOrderModel.findOne({
+        userId: param.userId,
+        state: 'OPEN',
+        'adInfo.wechatMpApiInfo.appid': param.appid
+    })
+    .exec(function (err, pointOrder) {
+        if( err
+            || !pointOrder ) {
+            callback(err || new Error('SubscribePointOrder: pointOrder is empty'));
+        } else {
+            pointOrder.state = 'SUCCESS';
+            pointOrder.save(callback);
+        }
+    });
+}
+
+const UpdateFailPointOrder = exports.UpdateFailPointOrder = (param, callback) => {
+
+    pointOrderModel.findById(param.pointOrderId)
+    .exec(function (err, pointOrder) {
+        if( err
+            || !pointOrder ) {
+            callback(err || new Error('UpdateFailPointOrder: pointOrder is empty'));
+        } else {
+            pointOrder.state = 'FAIL';
+            pointOrder.save(callback);
+        }
+    });
+}

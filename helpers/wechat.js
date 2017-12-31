@@ -1,14 +1,16 @@
 
 const async = require('async');
-const request = require('request');
 const adModel = require('../models/ad');
+const tradeAdModel = require('../models/tradeAd');
+const partnerModel = require('../models/partner');
 const systemConfigModel = require('../models/systemConfig');
+const pointOrderModel = require('../models/pointOrder');
+const wechatApi = require('../api/wechat');
+const deviceApi = require('../api/device');
 const cryptHelper = require('./crypt');
+const toolHelper = require('./tool');
 
-const WECHAT_OPEN_APP_ID = process.env.WECHAT_OPEN_APP_ID;
-const WECHAT_OPEN_APP_SECRET = process.env.WECHAT_OPEN_APP_SECRET;
 const WECHAT_OPEN_ENCODE_KEY = process.env.WECHAT_OPEN_ENCODE_KEY;
-
 const CRYPTO_AES_KEY = new Buffer(WECHAT_OPEN_ENCODE_KEY + '=', 'base64');
 const CRYPTO_IV = CRYPTO_AES_KEY.slice(0, 16);
 
@@ -38,20 +40,22 @@ const CreatePreAuthCode = exports.CreatePreAuthCode = (adId, callback) => {
 
         GetPreAuthCode: ['GetOpenToken', (result, callback) => {
             console.log('[CALL] CreatePreAuthCode, GetPreAuthCode');
-            GetPreAuthCode(result.GetOpenToken, callback);
+            wechatApi.OpenCreatePreAuthCode({
+                access_token: result.GetOpenToken
+            }, callback);
         }],
 
         UpdateAdPreAuthCode: ['GetPreAuthCode', (result, callback) => {
             console.log('[CALL] CreatePreAuthCode, UpdateAdPreAuthCode');
             adModel.UpdateWechatMpPreAuthCode({
                 adId: result.Pre.adId,
-                pre_auth_code: result.GetPreAuthCode
+                pre_auth_code: result.GetPreAuthCode.pre_auth_code
             }, callback);
         }]
 
     }, (err, results) => {
         console.log('[CALLBACK] CreatePreAuthCode');
-        callback(err, results.GetPreAuthCode);
+        callback(err, results.GetPreAuthCode.pre_auth_code);
     });
 }
 
@@ -76,7 +80,7 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
 
         GetMpAuthInfo: ['GetOpenToken', (result, callback) => {
             console.log('[CALL] UpdateWechatMpAuthInfo, GetMpAuthInfo');
-            GetMpAuthInfo({
+            wechatApi.OpenQueryAuth({
                 access_token: result.GetOpenToken,
                 auth_code: result.Pre.auth_code
             }, callback);
@@ -89,7 +93,7 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
                 if( !haveFuncscope
                     && element.funcscope_category.id == 1 ){
                     haveFuncscope = true;
-                    GetMpInfo({
+                    wechatApi.OpenGetAuthorizerInfo({
                         access_token: result.GetOpenToken,
                         appid: result.GetMpAuthInfo.authorizer_appid
                     }, callback);
@@ -121,7 +125,7 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
                 service_type: result.GetMpInfo.service_type_info.id,
                 verify_type: result.GetMpInfo.verify_type_info.id,
                 access_token: result.GetMpAuthInfo.authorizer_access_token,
-                expires_in: CreateExpiresInDate(result.GetMpAuthInfo.expires_in),
+                expires_in: toolHelper.CreateExpiresInDate(result.GetMpAuthInfo.expires_in),
                 refresh_token: result.GetMpAuthInfo.authorizer_refresh_token,
                 nick_name: result.GetMpInfo.nick_name,
                 head_img: result.GetMpInfo.head_img,
@@ -159,6 +163,88 @@ const CancelWechatMpAuthInfo = exports.CancelWechatMpAuthInfo = (param, callback
     });
 }
 
+const AdSubscribe = exports.AdSubscribe = (param, callback) => {
+
+    async.auto({
+        Pre: (callback) => {
+            console.log('[CALL] AdSubscribe, Pre');
+            if( !param
+                || !param.userId
+                || !param.appid ){
+                callback(new Error('AdSubscribe: param is error'));
+            } else {
+                callback(null, param);
+            }
+        },
+
+        SubscribePointOrder: ['Pre', (result, callback) => {
+            console.log('[CALL] AdSubscribe, SubscribePointOrder');
+            pointOrderModel.SubscribePointOrder(param, callback);
+        }],
+
+        GetPointById: ['SubscribePointOrder', (result, callback) => {
+            console.log('[CALL] AdSubscribe, GetPointById');
+            pointModel.GetPointById({ pointId: result.SubscribePointOrder.pointId }, callback);
+        }],
+
+        GetAdById: ['GetPointById', (result, callback) => {
+            console.log('[CALL] AdSubscribe, GetAdById');
+            adModel.GetAdById({ adId: result.SubscribePointOrder.adId }, callback);
+        }],
+
+        CreateTradeAd: ['GetAdById', (result, callback) => {
+            console.log('[CALL] AdSubscribe, CreateTradeAd');
+            let newTradeAd = {
+                pointOrderId: result.SubscribePointOrder._id,
+                userId: result.SubscribePointOrder.userId,
+                adId: result.SubscribePointOrder.adId,
+                aderId: result.GetAdById.aderId,
+                partnerId: result.GetPointById.partnerId,
+                payout: result.GetAdById.deliverInfo.payout,
+                income: result.GetAdById.deliverInfo.income
+            };
+            if( result.Pre.openId ) { newTradeAd.openId = result.Pre.openId; }
+            if( result.Pre.event ) { newTradeAd.event = result.Pre.event; }
+            if( result.Pre.appid ) { newTradeAd.appid = result.Pre.appid; }
+            tradeAdModel.CreateTradeAd(newTradeAd, callback);
+        }],
+
+        PartnerIncome: ['CreateTradeAd', (result, callback) => {
+            console.log('[CALL] AdSubscribe, PartnerIncome');
+            partnerModel.PartnerIncome({
+                partnerId: result.GetPointById.partnerId,
+                income: result.GetAdById.deliverInfo.payout - result.GetAdById.deliverInfo.income
+            }, callback);
+        }],
+
+        TakeDeviceItem: ['PartnerIncome', (result, callback) => {
+            console.log('[CALL] AdSubscribe, TakeDeviceItem');
+            if( result.FindPoint.type == 'ZHIJINJI'
+                && result.FindPoint.deviceInfo ) {
+                deviceApi.TakeDeviceItem({
+                    pointOrderId: result.SubscribePointOrder._id,
+                    devNo: result.FindPoint.deviceInfo.devNo
+                }, callback);
+            } else {
+                callback(null, 'SUCCESS');
+            }
+        }],
+
+        CheckFailPointOrder: ['TakeDeviceItem', (result, callback) => {
+            console.log('[CALL] AdSubscribe, CheckFailPointOrder');
+            if( result.TakeDeviceItem == 'FAIL' ){
+                pointOrderModel.UpdateFailPointOrder({ pointOrderId: result.FinishPointOrder._id }, callback);
+            } else {
+                callback(null);
+            }
+        }]
+
+    }, (err, results) => {
+        console.log('[CALLBACK] AdSubscribe');
+        callback(err, results.GetPreAuthCode.pre_auth_code);
+    });
+}
+
 const GetOpenToken = exports.GetOpenToken = (param, callback) => {
     console.log('[CALL] GetOpenToken');
 
@@ -167,158 +253,31 @@ const GetOpenToken = exports.GetOpenToken = (param, callback) => {
             console.log('[CALLBACK] GetOpenToken');
             callback(err);
         } else if( wechatOpen.access_token
-            && CheckExpiresInDate(wechatOpen.expires_in) ) {
+            && toolHelper.CheckExpiresInDate(wechatOpen.expires_in) ) {
             console.log('[CALLBACK] GetOpenToken');
             callback(null, wechatOpen.access_token);
         } else {
-            let option = {
-                url: 'https://api.weixin.qq.com/cgi-bin/component/api_component_token',
-                method: 'POST',
-                headers: {  
-                    'content-type': 'application/json'
-                },
-                json: {
-                    component_appid: WECHAT_OPEN_APP_ID,
-                    component_appsecret: WECHAT_OPEN_APP_SECRET, 
-                    component_verify_ticket: wechatOpen.ticket
-                }
-            };
-
-            request.post(option, function(err, ret, body) {
-                console.log('[CALL] GetOpenToken, post return:');
-                console.log(body);
-                if( err 
-                    || !ret.statusCode
-                    || ret.statusCode != 200
-                    || !body
-                    || !body.component_access_token ) {
-                    console.log('[CALLBACK] GetOpenToken');
-                    callback(err || new Error('post return is error'));
-                } else {
+            wechatApi.OpenComponentToken({
+                component_verify_ticket: wechatOpen.ticket
+            }, (err, result) => {
+                if( !err ) {
                     systemConfigModel.UpdateWechatOpenToken({
-                        access_token: body.component_access_token,
-                        expires_in: CreateExpiresInDate(body.expires_in)
+                        access_token: result.component_access_token,
+                        expires_in: toolHelper.CreateExpiresInDate(result.expires_in)
                     }, function (err, systemConfig) {
                         console.log('[CALLBACK] GetOpenToken');
-                        callback(err, body.component_access_token);
+                        callback(err, result.component_access_token);
                     });
+                } else {
+                    callback(err);
                 }
             });
         }
     });
 }
 
-const GetPreAuthCode = exports.GetPreAuthCode = (access_token, callback) => {
-    console.log('[CALL] GetPreAuthCode');
-
-    if( !access_token ) {
-        console.log('[CALLBACK] GetPreAuthCode');
-        return callback(new Error('access_token is error'));
-    }
-
-    var option = {
-        url: 'https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=' + access_token,
-        method: 'POST',
-        headers: {  
-            'content-type': 'application/json'
-        },
-        json: {
-            component_appid: WECHAT_OPEN_APP_ID
-        }
-    };
-
-    request.post(option, function(err, ret, body) {
-        console.log('[CALL] GetPreAuthCode, post return:');
-        console.log(body);
-        if( err
-            || !ret.statusCode
-            || ret.statusCode != 200
-            || !body
-            || !body.pre_auth_code ) {
-            console.log('[CALLBACK] GetPreAuthCode');
-            callback(err || new Error('post return is error'));
-        } else {
-            callback(null, body.pre_auth_code);
-        }
-    });
-}
-
-const GetMpAuthInfo = exports.GetMpAuthInfo = (param, callback) => {
-    console.log('[CALL] GetMpAuthInfo');
-
-    if( !param
-        || !param.access_token
-        || !param.auth_code ) {
-        console.log('[CALLBACK] GetMpAuthInfo');
-        return callback(new Error('param is error'));
-    }
-
-    var option = {
-        url: 'https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token=' + param.access_token,
-        method: 'POST',
-        headers: {  
-            'content-type': 'application/json'
-        },
-        json: {
-            component_appid: WECHAT_OPEN_APP_ID,
-            authorization_code: param.auth_code
-        }
-    };
-
-    request.post(option, function(err, ret, body) {
-        console.log('[CALL] GetMpAuthInfo, post return:');
-        console.log(body);
-        if( err
-            || !ret.statusCode
-            || ret.statusCode != 200
-            || !body
-            || !body.authorization_info ) {
-            console.log('[CALLBACK] GetMpAuthInfo');
-            callback(err || new Error('post return is error'));
-        } else {
-            callback(null, body.authorization_info);
-        }
-    });
-}
-
-const GetMpInfo = exports.GetMpInfo = (param, callback) => {
-    console.log('[CALL] GetMpInfo');
-
-    if( !param
-        || !param.access_token
-        || !param.appid ) {
-        console.log('[CALLBACK] GetMpInfo');
-        return callback(new Error('param is error'));
-    }
-
-    var option = {
-        url: 'https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_info?component_access_token=' + param.access_token,
-        method: 'POST',
-        headers: {  
-            'content-type': 'application/json'
-        },
-        json: {
-            component_appid: WECHAT_OPEN_APP_ID,
-            authorizer_appid: param.appid
-        }
-    };
-
-    request.post(option, function(err, ret, body) {
-        console.log('[CALL] GetMpInfo, post return:');
-        console.log(body);
-        if( err
-            || !ret.statusCode
-            || ret.statusCode != 200
-            || !body
-            || !body.authorizer_info ) {
-            console.log('[CALLBACK] GetMpInfo');
-            callback(err || new Error('post return is error'));
-        } else {
-            callback(null, body.authorizer_info);
-        }
-    });
-}
 /*
+
 const GetMpToken = exports.GetMpToken = (param, callback) => {
     console.log('[CALL] GetMpToken');
 
@@ -335,7 +294,7 @@ const GetMpToken = exports.GetMpToken = (param, callback) => {
             console.log('[CALLBACK] GetMpToken');
             callback(err);
         } else if( wechatOpen.access_token
-            && CheckExpiresInDate(wechatOpen.expires_in) ) {
+            && toolHelper.CheckExpiresInDate(wechatOpen.expires_in) ) {
             console.log('[CALLBACK] GetMpToken');
             callback(null, wechatOpen.access_token);
         } else {
@@ -365,7 +324,7 @@ const GetMpToken = exports.GetMpToken = (param, callback) => {
                 } else {
                     systemConfigModel.UpdateWechatOpenToken({
                         access_token: body.component_access_token,
-                        expires_in: CreateExpiresInDate(body.expires_in)
+                        expires_in: toolHelper.CreateExpiresInDate(body.expires_in)
                     }, function (err, newWechatOpen) {
                         console.log('[CALLBACK] GetMpToken');
                         callback(err, newWechatOpen.access_token);
@@ -377,16 +336,28 @@ const GetMpToken = exports.GetMpToken = (param, callback) => {
 }*/
 
 
-const CreateExpiresInDate = exports.CreateExpiresInDate = (expires_in) => {
-    let expiresInDate = new Date();
-    expiresInDate.setTime(expiresInDate.getTime() + expires_in * 1000 - 5 * 60 * 1000);
-    return expiresInDate;
-}
-
-const CheckExpiresInDate = exports.CheckExpiresInDate = (expiresInDate) => {
-    let currentDate = new Date();
-    return currentDate.getTime() < expiresInDate.getTime();
-}
+const EncryptMsg = exports.EncryptMsg = (param) => {
+    console.log('[CALL] EncryptMsg, param:');
+    console.log(param);
+    
+    const msgXml = cryptHelper.GetXmlFromJson(param.xml);
+    const encryptData = Encrypt(msgXml);
+    const msgSignatureArray = new Array(
+        param.token, 
+        param.timestamp, 
+        param.nonce, 
+        encryptData
+    );
+    const msgEncryptJson = {
+        xml: {
+            Encrypt: encryptData,
+            MsgSignature: cryptHelper.EncryptSha1(msgSignatureArray.sort()),
+            TimeStamp: param.timestamp,
+            Nonce: param.nonce
+        }
+    };
+    return cryptHelper.GetXmlFromJson(msgEncryptJson);
+};
 
 const Decrypt = exports.Decrypt = (msgEncrypt) => {
     console.log('[CALL] Decrypt, msgEncrypt:');
@@ -431,4 +402,5 @@ const Encrypt = exports.Encrypt = (msgDecrypt) => {
     console.log(msgEncrypt);
     return msgEncrypt;
 };
- 
+
+

@@ -11,7 +11,7 @@ const adSchema = new mongoose.Schema({
     isDefault:              { type: Boolean,            default: false },
     aderId:                 { type: ObjectId,           required: true, index: true },
     type:                   { type: String,             required: true }, //'WECHAT_MP_AUTH', 'WECHAT_MP_API'
-    state:                  { type: String,             default: 'CREATE' }, //'CREATE', 'OPEN', 'DELIVER', 'SUCESS', 'REPEAT', 'CANCEL', 'NO_BALANCE'
+    state:                  { type: String,             default: 'CREATE' }, //'CREATE', 'OPEN', 'DELIVER', 'SUCESS', 'REPEAT', 'CANCEL'
 
     deliverInfo: {
         payout:             { type: Number,             required: true },
@@ -85,6 +85,24 @@ const GetAdById = exports.GetAdById = (param, callback) => {
     }
 
     adModel.findById(param.adId, callback);
+}
+
+const FinishAd = exports.FinishAd = (param, callback) => {
+    if( !param
+        || !param.adId ) {
+        return callback(new Error('FinishAd: param is error'));
+    }
+
+    adModel.findById(param.adId)
+    .exec(function (err, ad) {
+        if( err
+            || !ad ) {
+            callback(err || new Error('FinishAd: ad is empty'));
+        } else {
+            ad.state = 'FAIL';
+            ad.save(callback);
+        }
+    });
 }
 
 const UpdateWechatMpPreAuthCode = exports.UpdateWechatMpPreAuthCode = (param, callback) => {

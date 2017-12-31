@@ -35,24 +35,31 @@ const DecodePKCS7 = exports.DecodePKCS7 = (buff) => {
 }
 
 const EncodePKCS7 = exports.EncodePKCS7 = (buff) => {
-    let blockSize = 32;
-    let strSize = buff.length;
-    let amountToPad = blockSize - (strSize % blockSize);
-    let pad = new Buffer(amountToPad-1);
+    const blockSize = 32;
+    const strSize = buff.length;
+    const amountToPad = blockSize - (strSize % blockSize);
+    const pad = new Buffer(amountToPad-1);
     pad.fill(String.fromCharCode(amountToPad));
     return Buffer.concat([buff, pad]);
 }
 
 const DecryptAes256Cbc = exports.DecryptAes256Cbc = (param) => {
 
-    let decipher = crypto.createDecipheriv('aes-256-cbc', param.aesKey, param.aesIv);
+    const decipher = crypto.createDecipheriv('aes-256-cbc', param.aesKey, param.aesIv);
     decipher.setAutoPadding(false);
     return Buffer.concat([decipher.update(param.data, 'base64'), decipher.final()]);
 }
 
 const EncryptAes256Cbc = exports.EncryptAes256Cbc = (param) => {
 
-    let cipher = crypto.createCipheriv('aes-256-cbc', param.aesKey, param.aesIv);
+    const cipher = crypto.createCipheriv('aes-256-cbc', param.aesKey, param.aesIv);
     cipher.setAutoPadding(false);
     return Buffer.concat([cipher.update(param.data), cipher.final()]).toString('base64');
+}
+
+const EncryptSha1 = exports.EncryptSha1 = (data) => {
+
+    const hash = crypto.createHash('sha1');
+    hash.update(data);
+    return hash.digest('hex');
 }

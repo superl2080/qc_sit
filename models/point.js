@@ -8,7 +8,7 @@ const pointSchema = new mongoose.Schema({
     createDate:             { type: Date,               default: new Date() },
 
     partnerId:              { type: ObjectId,           required: true, index: true },
-    type:                   { type: String,             required: true }, //'POINT', 'DEVICE'
+    type:                   { type: String,             required: true }, //'ZHIJIN', 'ZHIJINJI'
     state:                  { type: String,             default: 'OPEN' }, //'OPEN', 'DEPLOY', 'TEST', 'CLOSE'
 
     deviceInfo: {
@@ -38,3 +38,12 @@ try {
     }
 }
 
+
+const GetPointById = exports.GetPointById = (param, callback) => {
+    if( !param
+        || !param.pointId ) {
+        return callback(new Error('GetAdById: param is error'));
+    }
+
+    pointModel.findById(param.pointId, callback);
+}

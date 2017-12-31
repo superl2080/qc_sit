@@ -14,8 +14,8 @@ const partnerSchema = new mongoose.Schema({
         wechatId:           { type: String,             index: true },
     },
 
+    isDefault:              { type: Boolean,            default: false },
     balance:                { type: Number,             required: true },
-    payout:                 { type: Number,             required: true },
     income:                 { type: Number,             required: true },
     character:              { type: String,             required: true }, // 'DAILI', 'ZHITUI'
 
@@ -58,6 +58,26 @@ const CheckPassword = exports.CheckPassword = (param, callback) => {
                 passwordAuth: param.password,
                 passwordCrypt: partner.password
             }));
+        }
+    });
+}
+
+const PartnerIncome = exports.PartnerIncome = (param, callback) => {
+    if( !param ||
+        !param.partnerId ||
+        !param.income ) {
+        callback(new Error('param is error'));
+        return ;
+    }
+
+    partnerModel.findById(param.partnerId)
+    .exec(function (err, partner) {
+        if( err
+            || !partner ) {
+            callback(err || new Error('PartnerIncome: partner is empty'));
+        } else {
+            partner.balance = partner.balance + param.income;
+            partner.save(callback);
         }
     });
 }
