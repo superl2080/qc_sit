@@ -348,12 +348,10 @@ const EncryptMsg = exports.EncryptMsg = (param) => {
         encryptData
     );
     const msgEncryptJson = {
-        xml: {
-            Encrypt: encryptData,
-            MsgSignature: cryptHelper.EncryptSha1(msgSignatureArray.sort().join('')),
-            TimeStamp: param.timestamp,
-            Nonce: param.nonce
-        }
+        Encrypt: encryptData,
+        MsgSignature: cryptHelper.EncryptSha1(msgSignatureArray.sort().join('')),
+        TimeStamp: param.timestamp,
+        Nonce: param.nonce
     };
     return cryptHelper.GetXmlFromJson(msgEncryptJson);
 };

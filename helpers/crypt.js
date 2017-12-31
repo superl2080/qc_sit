@@ -2,9 +2,8 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const xml2js = require('xml2js');
-const xml2jsBuilder = new xml2js.Builder();
+const xml2jsBuilder = new xml2js.Builder({rootName:'xml', cdata:true, headless:true, renderOpts : {indent:' ', pretty:'true' }});
 const xml2jsParser = new xml2js.Parser();
-
 
 const ParseJsonFromXml = exports.ParseJsonFromXml = (xml, callback) => {
     xml2jsParser.parseString(xml, callback);
