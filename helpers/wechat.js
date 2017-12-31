@@ -9,9 +9,6 @@ const wechatApi = require('../api/wechat');
 const deviceApi = require('../api/device');
 const toolHelper = require('./tool');
 
-const CRYPTO_AES_KEY = new Buffer(process.env.WECHAT_OPEN_ENCODE_KEY + '=', 'base64');
-const CRYPTO_IV = CRYPTO_AES_KEY.slice(0, 16);
-
 
 const UpdateTicket = exports.UpdateTicket = (newTicket, callback) => {
     systemConfigModel.UpdateWechatOpenTicket(newTicket, callback);

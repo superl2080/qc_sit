@@ -5,6 +5,9 @@ const xml2js = require('xml2js');
 const xml2jsBuilder = new xml2js.Builder({rootName: 'xml', cdata: true, headless: true});
 const xml2jsParser = new xml2js.Parser({ explicitArray: false, ignoreAttrs: true });
 
+const CRYPTO_AES_KEY = new Buffer(process.env.WECHAT_OPEN_ENCODE_KEY + '=', 'base64');
+const CRYPTO_IV = CRYPTO_AES_KEY.slice(0, 16);
+
 
 const ParseJsonFromXml = exports.ParseJsonFromXml = (xml, callback) => {
     xml2jsParser.parseString(xml, callback);
