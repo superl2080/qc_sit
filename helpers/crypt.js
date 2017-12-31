@@ -2,7 +2,8 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const xml2js = require('xml2js');
-const xml2jsBuilder = new xml2js.Builder({rootName: 'xml', cdata: true, headless: true});
+const myXml2jsHelper = require('./myXml2js');
+const xml2jsBuilder = new myXml2jsHelper.Builder({rootName: 'xml', cdata: true, headless: true});
 const xml2jsParser = new xml2js.Parser({ explicitArray: false, ignoreAttrs: true });
 
 const CRYPTO_AES_KEY = new Buffer(process.env.WECHAT_OPEN_ENCODE_KEY + '=', 'base64');
