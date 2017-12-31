@@ -10,8 +10,7 @@ const deviceApi = require('../api/device');
 const cryptHelper = require('./crypt');
 const toolHelper = require('./tool');
 
-const WECHAT_OPEN_ENCODE_KEY = process.env.WECHAT_OPEN_ENCODE_KEY;
-const CRYPTO_AES_KEY = new Buffer(WECHAT_OPEN_ENCODE_KEY + '=', 'base64');
+const CRYPTO_AES_KEY = new Buffer(process.env.WECHAT_OPEN_ENCODE_KEY + '=', 'base64');
 const CRYPTO_IV = CRYPTO_AES_KEY.slice(0, 16);
 
 
@@ -305,7 +304,7 @@ const GetMpToken = exports.GetMpToken = (param, callback) => {
                     'content-type': 'application/json'
                 },
                 json: {
-                    component_appid: WECHAT_OPEN_APP_ID,
+                    component_appid: process.env.WECHAT_OPEN_APP_ID,
                     authorizer_appid: param.appid, 
                     authorizer_refresh_token: param.refresh_token
                 }
@@ -392,7 +391,7 @@ const Encrypt = exports.Encrypt = (msgDecrypt) => {
     let msg_content = new Buffer(msgDecrypt);
     let msg_len = new Buffer(4);
     msg_len.writeUInt32BE(msg_content.length, 0);
-    let msg_appId = new Buffer(WECHAT_OPEN_APP_ID);
+    let msg_appId = new Buffer(process.env.WECHAT_OPEN_APP_ID);
     let raw_msg = Buffer.concat([random16, msg_len, msg_content, msg_appId]);
 
     raw_msg = cryptHelper.EncodePKCS7(raw_msg);
