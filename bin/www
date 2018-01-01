@@ -5,21 +5,14 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('web:server');
+var debug = require('debug')('sit:server');
 var http = require('http');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var f_port;
-if(process.env.NODE_ENV === 'production') {
-    f_port = process.env.PORT || 3001;
-} else {
-    f_port = process.env.PORT || 3101;
-}
-
-var port = normalizePort(f_port);
+var port = normalizePort(process.env.PORT);
 app.set('port', port);
 
 /**

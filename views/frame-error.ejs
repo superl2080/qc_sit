@@ -10,8 +10,9 @@
 
     <body> 
         <div class="error-browser">
-            <h5><%= title %></h5>
-            <p><%= message %></p>
+            <h1><%= error.message %></h1>
+            <h2><%= error.status %></h2>
+            <p><%= error.stack %></p>
         </div>
 
         <script type="text/javascript" src="javascripts/jquery-3.2.1.min.js"></script>
