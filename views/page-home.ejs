@@ -1,55 +1,55 @@
 
 <script type="text/javascript">
 <%  if(takeItemRes) { %>
-	takeItemRes = "<%= takeItemRes %>";
+    takeItemRes = "<%= takeItemRes %>";
 <%  } %>
 <%  if(deviceInfo) { %>
-	deviceInfo_type = "<%= deviceInfo.type %>";
+    deviceInfo_type = "<%= deviceInfo.type %>";
 <%  } %>
 </script>
 
 
 <div class="home-top z-depth-1">
-	<div class="home-top-left">
-		<img src="images/logo.png" />
-	</div>
+    <div class="home-top-left">
+        <img src="images/logo.png" />
+    </div>
 
-	<div class="home-top-right">
-	</div>
+    <div class="home-top-right">
+    </div>
 </div>
 
 <div class="carousel carousel-slider center" data-indicators="true">
-	<div class="carousel-item black-text">
-		<h2>纸帕巾</h2>
-		<p class="black-text">生活总有意想不到的需要<br>
-		一包纸帕巾，给你无声的安心</p>
-		<img class="z-depth-1" src="images/product-zhijin.jpg" />
+    <div class="carousel-item black-text">
+        <h2>纸帕巾</h2>
+        <p class="black-text">生活总有意想不到的需要<br>
+        一包纸帕巾，给你无声的安心</p>
+        <img class="z-depth-1" src="images/product-zhijin.jpg" />
 <%  if(deviceInfo && deviceInfo.type == 'ZHIJIN') { %>
-	  	<a class="btn waves-effect waves-light orange darken-2 white-text" id="order">免费领用</a>
-		<div class="position">
-			<img src="images/icon-position.png" />
-			<p class="black-text"><%= deviceInfo.name %><br>
-		</div>
+          <a class="btn waves-effect waves-light orange darken-2 white-text" id="order">免费领用</a>
+        <div class="position">
+            <img src="images/icon-position.png" />
+            <p class="black-text"><%= deviceInfo.name %><br>
+        </div>
 <%  } else { %>
-	  	<a class="btn waves-effect waves-light disabled">扫码后领用</a>
+          <a class="btn waves-effect waves-light disabled">扫码后领用</a>
 <%  } %>
-	</div>
-	<div class="carousel-item black-text">
-	  	<h2>卷纸</h2>
-	 	 <p class="black-text">与一段卷纸的亲密接触里<br>
-	 	 感受原木的自然、柔软、强韧</p>
-		<img class="z-depth-1" src="images/product-juanzhi.jpg" />
+    </div>
+    <div class="carousel-item black-text">
+          <h2>卷纸</h2>
+          <p class="black-text">与一段卷纸的亲密接触里<br>
+          感受原木的自然、柔软、强韧</p>
+        <img class="z-depth-1" src="images/product-juanzhi.jpg" />
 <%  if(deviceInfo && deviceInfo.type == 'JUANZHI') { %>
-	  	<a class="btn waves-effect waves-light orange darken-2 white-text" id="order">免费领用</a>
-		<div class="position">
-			<img src="images/icon-position.png" />
-			<p class="black-text"><%= deviceInfo.name %><br>
-		</div>
+          <a class="btn waves-effect waves-light orange darken-2 white-text" id="order">免费领用</a>
+        <div class="position">
+            <img src="images/icon-position.png" />
+            <p class="black-text"><%= deviceInfo.name %><br>
+        </div>
 <%  } else { %>
-	  	<a class="btn waves-effect waves-light disabled">扫码后领用</a>
+          <a class="btn waves-effect waves-light disabled">扫码后领用</a>
 <%  } %>
-	</div>
+    </div>
 
 </div>
 
-    	
+        
