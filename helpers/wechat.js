@@ -10,10 +10,6 @@ const deviceApi = require('../api/device');
 const toolHelper = require('./tool');
 
 
-const UpdateTicket = exports.UpdateTicket = (newTicket, callback) => {
-    systemConfigModel.UpdateWechatOpenTicket(newTicket, callback);
-}
-
 const CreatePreAuthCode = exports.CreatePreAuthCode = (adId, callback) => {
     
     async.auto({

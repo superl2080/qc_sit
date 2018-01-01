@@ -1,3 +1,8 @@
+/*
+  from xml2js
+  change line 14 and line 17
+  wechat receive require force CDATA xml
+*/
 
 (function() {
   "use strict";
