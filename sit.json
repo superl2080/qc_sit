@@ -1,0 +1,16 @@
+{
+    "apps": [
+        {
+            "name": "sit",
+            "script": "./bin/www",
+            "instances": "max",
+            "exec_mode": "cluster",
+            "env": {
+                "SERVICE_URL": "http://service.51qingcheng.com",
+                "PORT": 3001,
+                "MONGO_URL": "mongodb://localhost/qingcheng",
+                "NODE_ENV": "development"
+            }
+        }
+    ]
+}
