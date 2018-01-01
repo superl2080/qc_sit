@@ -1,6 +1,9 @@
 
 const toolHelper = require('../helpers/tool');
 
+const WECHAT_OPEN_APP_ID = process.env.WECHAT_OPEN_APP_ID || '';
+const WECHAT_OPEN_APP_SECRET = process.env.WECHAT_OPEN_APP_SECRET || '';
+
 
 const OpenComponentToken = exports.OpenComponentToken = (param, callback) => {
     console.log('[CALL] OpenComponentToken, param:');
@@ -9,8 +12,8 @@ const OpenComponentToken = exports.OpenComponentToken = (param, callback) => {
     toolHelper.PostJson({
         url: 'https://api.weixin.qq.com/cgi-bin/component/api_component_token',
         json: {
-            component_appid: process.env.WECHAT_OPEN_APP_ID,
-            component_appsecret: process.env.WECHAT_OPEN_APP_SECRET, 
+            component_appid: WECHAT_OPEN_APP_ID,
+            component_appsecret: WECHAT_OPEN_APP_SECRET, 
             component_verify_ticket: param.component_verify_ticket
         }
     }, function(err, result) {
@@ -31,7 +34,7 @@ const OpenCreatePreAuthCode = exports.OpenCreatePreAuthCode = (param, callback) 
     toolHelper.PostJson({
         url: 'https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=' + param.access_token,
         json: {
-            component_appid: process.env.WECHAT_OPEN_APP_ID
+            component_appid: WECHAT_OPEN_APP_ID
         }
     }, function(err, result) {
         if( err 
@@ -50,7 +53,7 @@ const OpenQueryAuth = exports.OpenQueryAuth = (param, callback) => {
     toolHelper.PostJson({
         url: 'https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token=' + param.access_token,
         json: {
-            component_appid: process.env.WECHAT_OPEN_APP_ID,
+            component_appid: WECHAT_OPEN_APP_ID,
             authorization_code: param.auth_code
         }
     }, function(err, result) {
@@ -70,7 +73,7 @@ const OpenGetAuthorizerInfo = exports.OpenGetAuthorizerInfo = (param, callback) 
     toolHelper.PostJson({
         url: 'https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_info?component_access_token=' + param.access_token,
         json: {
-            component_appid: process.env.WECHAT_OPEN_APP_ID,
+            component_appid: WECHAT_OPEN_APP_ID,
             authorizer_appid: param.appid
         }
     }, function(err, result) {

@@ -6,7 +6,9 @@ const myXml2jsHelper = require('./myXml2js');
 const xml2jsBuilder = new myXml2jsHelper.Builder({rootName: 'xml', cdata: true, headless: true});
 const xml2jsParser = new xml2js.Parser({ explicitArray: false, ignoreAttrs: true });
 
-const CRYPTO_AES_KEY = new Buffer(process.env.WECHAT_OPEN_ENCODE_KEY + '=', 'base64');
+const WECHAT_OPEN_APP_ID = process.env.WECHAT_OPEN_APP_ID || '';
+const WECHAT_OPEN_ENCODE_KEY = process.env.WECHAT_OPEN_ENCODE_KEY || '';
+const CRYPTO_AES_KEY = new Buffer(WECHAT_OPEN_ENCODE_KEY + '=', 'base64');
 const CRYPTO_IV = CRYPTO_AES_KEY.slice(0, 16);
 
 
@@ -89,7 +91,7 @@ const EncryptMsg = (msgDecrypt) => {
     let msg_content = new Buffer(msgDecrypt);
     let msg_len = new Buffer(4);
     msg_len.writeUInt32BE(msg_content.length, 0);
-    let msg_appId = new Buffer(process.env.WECHAT_OPEN_APP_ID);
+    let msg_appId = new Buffer(WECHAT_OPEN_APP_ID);
     let raw_msg = Buffer.concat([random16, msg_len, msg_content, msg_appId]);
 
     let msgEncrypt = EncryptAes256Cbc({ data: raw_msg, aesKey: CRYPTO_AES_KEY, aesIv: CRYPTO_IV });

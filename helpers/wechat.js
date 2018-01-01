@@ -296,7 +296,7 @@ const GetMpToken = exports.GetMpToken = (param, callback) => {
                     'content-type': 'application/json'
                 },
                 json: {
-                    component_appid: process.env.WECHAT_OPEN_APP_ID,
+                    component_appid: WECHAT_OPEN_APP_ID,
                     authorizer_appid: param.appid, 
                     authorizer_refresh_token: param.refresh_token
                 }

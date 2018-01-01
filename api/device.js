@@ -1,7 +1,7 @@
 
 const toolHelper = require('../helpers/tool');
 
-const SERVICE_URL = 'http://106.14.195.50:80';
+const DEVICE_URL = 'http://106.14.195.50:80';
 
 
 const TakeDeviceItem = exports.TakeDeviceItem = (param, callback) => {
@@ -9,7 +9,7 @@ const TakeDeviceItem = exports.TakeDeviceItem = (param, callback) => {
     console.log(param);
 
     toolHelper.PostJson({
-        url: SERVICE_URL + '/api/TakeDeviceItem',
+        url: DEVICE_URL + '/api/TakeDeviceItem',
         json: {
             devNo: param.devNo,
             deviceOrderId: param.pointOrderId.toString()
