@@ -39,3 +39,25 @@ const PostJson = exports.PostJson = (param, callback) => {
         }
     });
 }
+
+const GetJson = exports.GetJson = (param, callback) => {
+
+    let option = {
+        url: param.url
+    };
+
+    console.log('[CALL] GetJson, get:');
+    console.log(option);
+    request.get(option, function(err, ret, body) {
+        console.log('[CALLBACK] GetJson, get return:');
+        console.log(body);
+        if( err 
+            || !ret.statusCode
+            || ret.statusCode != 200
+            || !body ) {
+            callback(err || new Error('get return is error'));
+        } else {
+            callback(null, JSON.parse(body));
+        }
+    });
+}
