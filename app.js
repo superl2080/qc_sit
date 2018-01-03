@@ -6,12 +6,13 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const controller = require('./routes/controller');
+const main = require('./routes/main');
 
 const app = express();
+const router = exports.router = express.Router();
+
 
 mongoose.connect(process.env.MONGO_URL, {useMongoClient: true});
-const router = exports.router = express.Router();
 
 app.use(session({
     secret: 'sit51qingchengcom',
@@ -35,7 +36,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', controller.router);
+
+app.use('/', main.router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

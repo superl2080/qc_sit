@@ -2,21 +2,18 @@ var express = require('express');
 var session = require('express-session');
 var request = require('request');
 var async = require('async');
-var mongoose = require('mongoose');
 var cheerio = require('cheerio');
 var utility = require('utility');
 var xml2js = require('xml2js');
 var xml2jsBuilder = new xml2js.Builder();
 var xml2jsParser = new xml2js.Parser();
-var database = require('./database');
-var apiService = require('./apiService');
 
 /* Local var*/
-var userModel = mongoose.model('user');
-var adModel = mongoose.model('ad');
-var deviceModel = mongoose.model('device');
-var deviceOrderModel = mongoose.model('deviceOrder');
-var incomeOrderModel = mongoose.model('incomeOrder');
+var userModel = require('../imports/models/user');
+var adModel = require('../imports/models/ad');
+var pointModel = require('../imports/models/point');
+var pointOrderModel = require('../imports/models/pointOrder');
+var tradePayModel = require('../imports/models/tradePay');
 
 var WECHAT_AGENT = new RegExp('MicroMessenger');
 
@@ -31,10 +28,8 @@ function RedirectToLogin(params, callback) {
 
     if(WECHAT_AGENT.test(params.req.headers['user-agent'])) {
         params.req.session.flow.browser = 'WECHAT';
-        var REDIRECT_URI = 'http%3A%2F%2F' + params.req.headers.host + '%2Fwechat%2FresCode';
-        var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + APP_ID + 
-            '&redirect_uri=' + REDIRECT_URI + 
-            '&response_type=code&scope=snsapi_base&state=state#wechat_redirect';
+        var REDIRECT_URI = encodeURIComponent('http://' + params.req.headers.host + '/wechat/resCode');
+        var url = 'http://' + process.env.SERVICE_URL + '/wechat/mp/oAuth?redirect_uri=' + REDIRECT_URI;
 
         console.log('[REDIRECT] url:' + url);
         params.res.redirect(url);
@@ -47,68 +42,18 @@ function RedirectToLogin(params, callback) {
 module.exports.RedirectToLogin = RedirectToLogin;
 
 
-function GetOpenId(params, callback) {
-    console.log('[CALL] model/GetOpenId, wechatCode:' + params.req.session.flow.wechatCode);
-
-    var option = {
-        url: 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + APP_ID +
-        '&secret=' + APP_SECRET +
-        '&code=' + params.req.session.flow.wechatCode +
-        '&grant_type=authorization_code'
-    };
-
-    request.get(option, function(err, ret, body) {
-        if(!ret ||
-            !ret.statusCode ||
-            ret.statusCode != 200) {
-        } else {
-            var openId = JSON.parse(body).openid;
-            if(!openId) {
-            } else {
-                params.req.session.userInfo = {
-                    relate: {
-                        openId: openId
-                    }
-                };
-                callback(null);
-                return;
-            }
-        }
-        callback('ERROR_SERVICE');
-    });
-}
-module.exports.GetOpenId = GetOpenId;
-
-
 function UserLogin(params, callback) {
     console.log('[CALL] model/UserLogin');
 
-    var option = null;
-    if(!params.req.session.userInfo.relate ||
-        !params.req.session.userInfo.relate.openId) {
+    if(!params.req.session.userInfo.authId ||
+        !params.req.session.userInfo.authId.wechatId) {
         callback('ERROR_SERVICE');
         return;
     }
 
-    userModel.findOne({ 'relate.openId': params.req.session.userInfo.relate.openId }).
-    exec(function(err, userInfo){
-        if(!userInfo) {
-            var option = {
-                relate: {
-                    openId: params.req.session.userInfo.relate.openId
-                },
-                signDate: new Date(),
-                name: params.req.session.userInfo.relate.openId,
-                finishedAppids: []
-            };
-            userModel.create(option, function (err, newUserInfo) {
-                params.req.session.userInfo = newUserInfo;
-                callback(null);
-            });
-        } else {
-            params.req.session.userInfo = userInfo;
-            callback(null);
-        }
+    userModel.WechatLogin({ wechatId: params.req.session.userInfo.authId.wechatId }, function(err, userInfo){
+        params.req.session.userInfo = userInfo;
+        callback(null);
     });
 }
 module.exports.UserLogin = UserLogin;
@@ -117,7 +62,8 @@ module.exports.UserLogin = UserLogin;
 function CheckLogin(params, callback) {
     console.log('[CALL] model/CheckLogin');
 
-    if(!params.req.session.userInfo) {
+    if(!params.req.session
+        || !params.req.session.userInfo) {
         callback('SESSION_EXPIRED');
     } else {
         callback(null);
@@ -136,47 +82,14 @@ function SetTimeout(params, callback) {
 module.exports.SetTimeout = SetTimeout;
 
 
-function GetUserInfo(params, callback) {
-    console.log('[CALL] model/GetUserInfo');
+function GetPointInfo(params, callback) {
+    console.log('[CALL] model/GetPointInfo');
 
-    if(params.req.session.userInfo.relate &&
-        params.req.session.userInfo.relate.openId) {
-        userModel.findOne({ 'relate.openId': params.req.session.userInfo.relate.openId }).
-        exec(function(err, userInfo){
-            if(userInfo) {
-                params.req.session.userInfo = userInfo;
-                callback(null);
-            } else {
-                callback('ERROR_SERVICE');
-            }
-        });
-        return;
-    }
-    if(params.req.session.userInfo._id) {
-        userModel.findById(params.req.session.userInfo._id).
-        exec(function(err, userInfo){
-            if(userInfo) {
-                params.req.session.userInfo = userInfo;
-                callback(null);
-            } else {
-                callback('ERROR_SERVICE');
-            }
-        });
-        return;
-    }
-    callback('ERROR_SERVICE');
-}
-module.exports.GetUserInfo = GetUserInfo;
-
-
-function GetDeviceInfo(params, callback) {
-    console.log('[CALL] model/GetDeviceInfo');
-
-    if(!params.req.session.deviceInfo ||
-        !params.req.session.deviceInfo.devNo) {
+    if(!params.req.session.point ||
+        !params.req.session.point._id) {
         callback(null);
     } else {
-        deviceModel.findOne({devNo: params.req.session.deviceInfo.devNo}).
+        pointModel.findOne({devNo: params.req.session.point._id}).
         exec(function(err, deviceInfo){
             if(deviceInfo) {
                 params.req.session.deviceInfo = deviceInfo;
@@ -187,7 +100,7 @@ function GetDeviceInfo(params, callback) {
         });
     }
 }
-module.exports.GetDeviceInfo = GetDeviceInfo;
+module.exports.GetPointInfo = GetPointInfo;
 
 
 module.exports.GetDeviceOrderInfo = function (params, callback) {
@@ -391,7 +304,7 @@ function PrePay(params, callback) {
             mch_id: WXPAY_ID,
             nonce_str:  Math.floor(Math.random()*100000000).toString(),
             notify_url: 'http://' + params.req.headers.host + '/wechat/payBack',
-            openid: params.req.session.userInfo.relate.openId,
+            openid: params.req.session.userInfo.authId.wechatId,
             out_trade_no: incomeOrder._id.toString(),
             spbill_create_ip: params.req.headers['x-real-ip'],
             total_fee: params.req.session.deviceInfo.income.toString(),
@@ -507,3 +420,66 @@ function TakeDeviceItem(params, callback) {
 module.exports.TakeDeviceItem = TakeDeviceItem;
 
 
+function TakeDeviceItem(params, callback){
+    console.log('[CALL] apiService/TakeDeviceItem, params:');
+    console.log(params);
+    
+    if(params.userInfo.balance < params.deviceInfo.income) {
+        callback({res: 'NO_BALANCE'});
+    } else if(params.deviceInfo.state == 'OPEN') {
+        var option = {
+            /* Relate */
+            userId: params.userInfo._id,
+            partnerId: params.deviceInfo.partnerId,
+            type: params.deviceInfo.type,
+            city: params.deviceInfo.city,
+            devNo: params.deviceInfo.devNo,
+            income: params.deviceInfo.income,
+            /* Fixed */
+            date: new Date()
+        };
+        deviceOrderModel.create(option, function (err, deviceOrder) {
+            params.deviceOrder = deviceOrder;
+            requestTakeItem(params, callback);
+        });
+    } else {
+        callback({res: 'FAIL'});
+    }
+
+}
+
+function requestTakeItem(params, callback){
+    console.log('[CALL] apiService/requestTakeItem, params:');
+    console.log(params);
+
+    var option = {
+        url: 'http://106.14.195.50:80/api/TakeDeviceItem',
+        method: 'POST',
+        headers: {  
+            'content-type': 'application/json'
+        },
+        json: {
+            devNo: params.deviceInfo.devNo,
+            deviceOrderId: params.deviceOrder._id.toString()
+        }
+    };
+    console.log(option);
+    request.post(option, function(err, res, body) {
+        console.log('[CALLBACK] requestTakeItem, err:' + err + 'body:');
+        console.log(body);
+        var takeRes = 'FAIL';
+        if(!body ||
+            !body.data) {
+        } else {
+            takeRes = body.data.res;
+        }
+        if(takeRes == 'SUCCESS') {
+            partnerModel.findByIdAndUpdate(params.deviceOrder.partnerId, {$inc: {balance: params.deviceOrder.income}}, {new: true}).
+            exec(function(err, partnerInfo) {
+                callback({res: takeRes});
+            });
+        } else {
+            callback({res: takeRes});
+        }
+    });
+}   
