@@ -32,3 +32,28 @@ try {
     }
 }
 
+
+const WechatLogin = exports.WechatLogin = (param, callback) => {
+    if( !param
+        || !param.wechatId ) {
+        return callback(new Error('WechatLogin: param is error'));
+    }
+
+    userModel.findOne({ 'authId.wechatId': param.wechatId }, (err, user) => {
+        if( err
+            || !user ) {
+            userModel.create({ 
+                authId: {
+                    wechatId: param.wechatId
+                },
+                info: {
+                    signType: 'WECHAT'
+                }
+            }, callback);
+        } else {
+            user.info.lastDate = new Date();
+            user.info.loginTimes += 1;
+            user.save(callback);
+        }
+    });
+}
