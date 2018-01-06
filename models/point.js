@@ -42,7 +42,7 @@ try {
 const GetPointById = exports.GetPointById = (param, callback) => {
     if( !param
         || !param.pointId ) {
-        return callback(new Error('GetAdById: param is error'));
+        return callback(new Error('GetPointById: param is error'));
     }
 
     pointModel.findById(param.pointId, callback);
@@ -76,3 +76,4 @@ const UpdateZhijinji = exports.UpdateZhijinji = (param, callback) => {
         }
     });
 }
+

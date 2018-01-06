@@ -62,6 +62,15 @@ const CheckPassword = exports.CheckPassword = (param, callback) => {
     });
 }
 
+const GetPartnerById = exports.GetPartnerById = (param, callback) => {
+    if( !param
+        || !param.partnerId ) {
+        return callback(new Error('GetPartnerById: param is error'));
+    }
+
+    partnerModel.findById(param.partnerId, callback);
+}
+
 const GetDefaultPartner = exports.GetDefaultPartner = (param, callback) => {
     partnerModel.findOne({ isDefault: true }, callback);
 }

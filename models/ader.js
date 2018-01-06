@@ -29,17 +29,59 @@ try {
 
 
 const GetHaveBalanceAders = exports.GetHaveBalanceAders = (param, callback) => {
-    aderModel.find({ balance: { $gt: 0 } })
+    aderModel.find({ balance: { $gt: 100 } })
     .exec(callback);
 }
 
 const GetAderById = exports.GetAderById = (param, callback) => {
     if( !param ||
         !param.aderId ) {
-        callback(new Error('param is error'));
+        callback(new Error('GetAderById: param is error'));
         return ;
     }
 
     aderModel.findById( param.aderId )
     .exec(callback);
+}
+
+const DeliverAd = exports.DeliverAd = (param, callback) => {
+    if( !param
+        || !param.aderId
+        || !param.payout ) {
+        return callback(new Error('DeliverAd: param is error'));
+    }
+
+    aderModel.findById(param.aderId)
+    .exec((err, ader) => {
+        if( err
+            || !ader ) {
+            callback(err || new Error('DeliverAd: ader is empty'));
+        } else {
+            ader.balance -= param.payout;
+            if( ader.balance < 0 ){
+                callback(new Error('NO_BALANCE'));
+            } else {
+                ader.save(callback);
+            }
+        }
+    });
+}
+
+const CancelAd = exports.CancelAd = (param, callback) => {
+    if( !param
+        || !param.aderId
+        || !param.payout ) {
+        return callback(new Error('CancelAd: param is error'));
+    }
+
+    aderModel.findById(param.aderId)
+    .exec((err, ader) => {
+        if( err
+            || !ader ) {
+            callback(err || new Error('CancelAd: ader is empty'));
+        } else {
+            ader.balance += param.payout;
+            ader.save(callback);
+        }
+    });
 }

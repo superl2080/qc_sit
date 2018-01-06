@@ -11,11 +11,12 @@ const adSchema = new mongoose.Schema({
     isDefault:              { $type: Boolean,            default: false },
     aderId:                 { $type: ObjectId,           required: true, index: true },
     type:                   { $type: String,             required: true }, //'WECHAT_MP_AUTH', 'WECHAT_MP_API'
-    state:                  { $type: String,             default: 'CREATE' }, //'CREATE', 'OPEN', 'DELIVER', 'SUCESS', 'REPEAT', 'CANCEL'
+    state:                  { $type: String,             default: 'CREATE' }, //'CREATE', 'OPEN', 'DELIVER', 'SUCESS', 'CANCEL'
 
     deliverInfo: {
         payout:             { $type: Number,             required: true },
         income:             { $type: Number,             required: true },
+        priority:           { $type: Number,             required: true },
         count:              Number,
         partnerType:        { $type: String,             default: 'ALL' }, //'ALL', 'WHITE', 'BLACK'
         partnerIds:         [ ObjectId ],
@@ -91,24 +92,6 @@ const GetAdById = exports.GetAdById = (param, callback) => {
     adModel.findById(param.adId, callback);
 }
 
-const FinishAd = exports.FinishAd = (param, callback) => {
-    if( !param
-        || !param.adId ) {
-        return callback(new Error('FinishAd: param is error'));
-    }
-
-    adModel.findById(param.adId)
-    .exec(function (err, ad) {
-        if( err
-            || !ad ) {
-            callback(err || new Error('FinishAd: ad is empty'));
-        } else {
-            ad.state = 'FAIL';
-            ad.save(callback);
-        }
-    });
-}
-
 const UpdateWechatMpPreAuthCode = exports.UpdateWechatMpPreAuthCode = (param, callback) => {
     if( !param
         || !param.adId
@@ -147,39 +130,28 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
         return callback(new Error('UpdateWechatMpAuthInfo: param is error'));
     }
 
-    adModel.findOne({ 
-        'wechatMpAuthInfo.appid': param.appid,
-        'wechatMpAuthInfo.pre_auth_code': { $ne: param.pre_auth_code},
-        state: { $in: ['OPEN', 'DELIVER'] } 
-    }).exec(function (err, ad) {
+    adModel.findOne({ 'wechatMpAuthInfo.pre_auth_code': param.pre_auth_code })
+    .exec(function (err, ad) {
         if( err
-            || !ad ) {
-            adModel.findOne({ 'wechatMpAuthInfo.pre_auth_code': param.pre_auth_code })
-            .exec(function (err, ad) {
-                if( err
-                    || !ad
-                    || ad.type != 'WECHAT_MP_AUTH' ) {
-                    callback(new Error('UpdateWechatMpAuthInfo: can not find by pre_auth_code'));
-                } else {
-                    if( ad.state == 'CREATE' ) {
-                        ad.state = 'OPEN';
-                    }
-                    ad.wechatMpAuthInfo.appid = param.appid;
-                    ad.wechatMpAuthInfo.qrcode_url = param.qrcode_url;
-                    ad.wechatMpAuthInfo.auth = param.auth;
-                    ad.wechatMpAuthInfo.service_type = param.service_type;
-                    ad.wechatMpAuthInfo.verify_type = param.verify_type;
-                    ad.wechatMpAuthInfo.access_token = param.access_token;
-                    ad.wechatMpAuthInfo.expires_in = param.expires_in;
-                    ad.wechatMpAuthInfo.refresh_token = param.refresh_token;
-                    ad.wechatMpAuthInfo.nick_name = param.nick_name;
-                    ad.wechatMpAuthInfo.head_img = param.head_img;
-                    ad.wechatMpAuthInfo.user_name = param.user_name;
-                    ad.save(callback);
-                }
-            });
+            || !ad
+            || ad.type != 'WECHAT_MP_AUTH' ) {
+            callback(new Error('UpdateWechatMpAuthInfo: can not find by pre_auth_code'));
         } else {
-            callback(new Error('wechatMpAuthInfo: appid is repeat'));
+            if( ad.state == 'CREATE' ) {
+                ad.state = 'OPEN';
+            }
+            ad.wechatMpAuthInfo.appid = param.appid;
+            ad.wechatMpAuthInfo.qrcode_url = param.qrcode_url;
+            ad.wechatMpAuthInfo.auth = param.auth;
+            ad.wechatMpAuthInfo.service_type = param.service_type;
+            ad.wechatMpAuthInfo.verify_type = param.verify_type;
+            ad.wechatMpAuthInfo.access_token = param.access_token;
+            ad.wechatMpAuthInfo.expires_in = param.expires_in;
+            ad.wechatMpAuthInfo.refresh_token = param.refresh_token;
+            ad.wechatMpAuthInfo.nick_name = param.nick_name;
+            ad.wechatMpAuthInfo.head_img = param.head_img;
+            ad.wechatMpAuthInfo.user_name = param.user_name;
+            ad.save(callback);
         }
     });
 }
@@ -201,4 +173,122 @@ const CancelAdWechatMpAuthInfo = exports.CancelAdWechatMpAuthInfo = (appid, call
         }
     });
 }
+
+const DeliverAd = exports.DeliverAd = (param, callback) => {
+    if( !param
+        || !param.adId ) {
+        return callback(new Error('DeliverAd: param is error'));
+    }
+
+    adModel.find({ state: 'DELIVER' })
+    .gt('count', 0)
+    .nin('wechatMpAuthInfo.appid', param.appids)
+    .sort('-deliverInfo.priority createDate')
+    .$where(function () {
+        if( this.deliverInfo.partnerType == 'WHITE' ){
+            return this.deliverInfo.partnerIds.indexOf(param.partnerId) >= 0;
+        } else if( this.deliverInfo.partnerType == 'BLACK' ){
+            return this.deliverInfo.partnerIds.indexOf(param.partnerId) < 0;
+        } else {
+            return true;
+        }
+    })
+    .exec(function (err, ads) {
+        if( err
+            || !ads ) {
+            callback(err || new Error('DeliverAd: ad is empty'));
+        } else {
+            aderDeliverAd({
+                i: 0,
+                ads: ads
+            }, callback);
+        }
+    });
+}
+
+const aderDeliverAd = (param, callback) => {
+    aderModel.DeliverAd({
+        aderId: param.ads[param.i].aderId,
+        payout: param.ads[param.i].deliverInfo.payout
+    }, (err, result) => {
+        if( err
+            && param.i + 1 < ads.length ){
+            aderDeliverAd({
+                i: param.i + 1,
+                ads: ads
+            }, callback);
+        } else if( err ){
+            callback(err);
+        } else {
+            param.ads[param.i].deliverInfo.count -= 1;
+            param.ads[param.i].save(callback);
+        }
+    });
+}
+
+const CancelAd = exports.CancelAd = (param, callback) => {
+    if( !param
+        || !param.adId ) {
+        return callback(new Error('CancelAd: param is error'));
+    }
+
+    adModel.findById(param.adId)
+    .exec(function (err, ad) {
+        if( err
+            || !ad ) {
+            callback(err || new Error('CancelAd: ad is empty'));
+        } else {
+            ad.deliverInfo.count += 1;
+            ad.save((err, result) => {
+                if( err ){
+                    callback(err, result);
+                } else {
+                    aderModel.CancelAd({
+                        aderId: ad.aderId,
+                        payout: ad.deliverInfo.payout
+                    }, (err, result) => {
+                        callback(err, ad);
+                    });
+                }
+            });
+        }
+    });
+}
+
+const GetWechatMpAuthInfo = exports.GetWechatMpAuthInfo = (param, callback) => {
+
+    adModel.findById(param.adId)
+    .exec(function (err, ad) {
+        if( err
+            || !ad ) {
+            callback(err || new Error('GetWechatMpAuthInfo: ad is empty'));
+        } else {
+            callback(null, ad.wechatMpAuthInfo);
+        }
+    });
+}
+
+const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback) => {
+    if( !param
+        || !param.adId
+        || !param.access_token
+        || !param.expires_in
+        || !param.refresh_token ) {
+        return callback(new Error('UpdateWechatMpAuthInfo: param is error'));
+    }
+
+    adModel.findById(param.adId)
+    .exec(function (err, ad) {
+        if( err
+            || !ad ) {
+            callback(err || new Error('UpdateWechatMpAuthInfo: ad is empty'));
+        } else {
+            ad.wechatMpAuthInfo.access_token = param.access_token;
+            ad.wechatMpAuthInfo.expires_in = param.expires_in;
+            ad.wechatMpAuthInfo.refresh_token = param.refresh_token;
+            ad.save(callback);
+        }
+    });
+}
+
 

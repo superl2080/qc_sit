@@ -14,14 +14,11 @@ const tradeAdSchema = new mongoose.Schema({
     partnerId:              { $type: ObjectId,           required: true, index: true },
     payout:                 { $type: Number,             required: true },
     income:                 { $type: Number,             required: true },
+    appid:                  { $type: String,             required: true },             
 
     wechatMpInfo: {
         openId:             String,
         event:              String
-    },
-
-    wechatMpApiInfo: {
-        appid:              String
     }
 }, { typeKey: '$type' });
 
@@ -43,7 +40,8 @@ const CreateTradeAd = exports.CreateTradeAd = (param, callback) => {
         || !param.aderId
         || !param.partnerId
         || !param.payout
-        || !param.income ) {
+        || !param.income
+        || !param.appid ) {
         returncallback(new Error('CreateTradeAd: param is error'));
     }
 
@@ -55,6 +53,7 @@ const CreateTradeAd = exports.CreateTradeAd = (param, callback) => {
         partnerId: param.partnerId,
         payout: param.payout,
         income: param.income,
+        appid: param.appid
     };
     if( param.openId
         && param.event ) {
@@ -63,10 +62,17 @@ const CreateTradeAd = exports.CreateTradeAd = (param, callback) => {
             event: param.event
         }
     }
-    if( param.appid ) {
-        newTradeAd.wechatMpApiInfo = {
-            appid: param.appid
-        }
-    }
     tradeAdModel.create(newTradeAd, callback);
 }
+
+const GetUserTradeAds = exports.GetUserTradeAds = (param, callback) => {
+    if( !param
+        || !param.userId ) {
+        return callback(new Error('GetUserTradeAds: param is error'));
+    }
+
+    tradeAdModel.find({
+        userId: param.userId
+    }, callback);
+}
+
