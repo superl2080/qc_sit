@@ -9,7 +9,7 @@ const GetWechatAuthUrl = exports.GetWechatAuthUrl = (param) => {
     console.log('[CALL] GetWechatAuthUrl, param:');
     console.log(param);
 
-    let url = 'http://' + process.env.SERVICE_URL + '/wechat/mp/oAuth?redirect_uri=' + encodeURIComponent(param.redirect_uri);
+    let url = SERVICE_URL + '/wechat/mp/oAuth?redirect_uri=' + encodeURIComponent(param.redirect_uri);
 
     console.log('[CALLBACK] GetWechatAuthUrl');
     console.log(url);
