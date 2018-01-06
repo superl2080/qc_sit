@@ -86,7 +86,7 @@ const TestPointOrderDeliverAd = exports.TestPointOrderDeliverAd = (param, callba
             adModel.GetDefaultAd(null, callback);
         },
 
-        GetMpToken: ['CheckAuth', (result, callback) => {
+        GetMpToken: ['GetDefaultAd', (result, callback) => {
             console.log('[CALL] TestPointOrderDeliverAd, GetMpToken');
             adInfo.adId = result.GetDefaultAd._id,
             adInfo.appid = result.GetDefaultAd.wechatMpAuthInfo.appid;
