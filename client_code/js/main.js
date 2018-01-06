@@ -7,11 +7,6 @@ function pageDisplay() {
     takeItemToast();
     bindEvent();
     $('.carousel.carousel-slider').carousel();
-    if(deviceInfo_type == 'ZHIJIN') {
-        $('.carousel.carousel-slider').carousel('set', 0);
-    } else if(deviceInfo_type == 'JUANZHI') {
-        $('.carousel.carousel-slider').carousel('set', 1);
-    }
 }
 
 function takeItemToast() {

@@ -6,6 +6,10 @@
             "instances": "max",
             "exec_mode": "cluster",
             "env": {
+                "WECHAT_MP_APP_ID": "wx1676ae64c9ab902c",
+                "WECHAT_MP_APP_SECRET": "2c3a4d54806a9f9442c6f5ebf10a1e53",
+                "WECHAT_PAY_ID": "1485302692",
+                "WECHAT_PAY_KEY": "2c3a4d54806a9f9442c6f5ebf10a1e53",
                 "SERVICE_URL": "http://service.51qingcheng.com",
                 "PORT": 3001,
                 "MONGO_URL": "mongodb://localhost/qingcheng",
