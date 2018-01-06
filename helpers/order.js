@@ -112,7 +112,7 @@ const TestPointOrderDeliverAd = exports.TestPointOrderDeliverAd = (param, callba
     }, (err, result) => {
         console.log('[CALLBACK] TestPointOrderDeliverAd');
         if( err ){
-            callback(err, result);
+            callback(null, param.pointOrder);
         } else {
             adInfo.qrcode_url = result.GetQrcodeImageUrl;
             pointOrderModel.DeliverAd({
