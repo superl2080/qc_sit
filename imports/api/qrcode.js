@@ -7,8 +7,13 @@ const GetQrcodeImageUrl = exports.GetQrcodeImageUrl = (param, callback) => {
     console.log('[CALL] GetQrcodeImageUrl, param:');
     console.log(param);
 
+    let mhid = 'vEvEWg26zsMhMHctLdZVOaw';
+    if( param.type == 'SCAN' ) {
+        mhid = 'skTHBF3tnJ4hMHctLdZVOaI';
+    }
+
     toolHelper.GetJson({
-        url: 'https://cli.im/api/qrcode/code?text=' + param.url + '&mhid=tUOUXlvpz50hMHctKddQPaI'
+        url: 'https://cli.im/api/qrcode/code?text=' + param.url + '&mhid=' + mhid
     }, function(err, result) {
         if(err) {
             callback(err || new Error('GetQrcodeImageUrl: callback error'));
@@ -18,4 +23,3 @@ const GetQrcodeImageUrl = exports.GetQrcodeImageUrl = (param, callback) => {
         }
     });
 }
-

@@ -45,17 +45,13 @@ const GetPointById = exports.GetPointById = (param, callback) => {
         return callback(new Error('GetPointById: param is error'));
     }
 
-    pointModel.find({
-        state: { $in: ['DEPLOY', 'TEST'] }
-    }, callback);
+    pointModel.findById(param.pointId, callback);
 }
 
 const GetDeployPoints = exports.GetDeployPoints = (param, callback) => {
-    if( !param ) {
-        return callback(new Error('GetDeployPoints: param is error'));
-    }
-
-    pointModel.findById(param.pointId, callback);
+    pointModel.find({
+        state: { $in: ['DEPLOY', 'TEST'] }
+    }, callback);
 }
 
 const UpdateZhijinji = exports.UpdateZhijinji = (param, callback) => {

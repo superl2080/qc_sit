@@ -73,8 +73,10 @@ const EncryptString = exports.EncryptString = (param) => {
     console.log('[CALL] EncryptString, param:');
     console.log(param);
 
-    const cipher = crypto.createCipheriv('aes-256-cbc', CRYPTO_AES_KEY, CRYPTO_IV);
-    const strEncrypt = Buffer.concat([cipher.update(param), cipher.final()]).toString('base64');
+    let strEncrypt = new Buffer(param);
+    strEncrypt = strEncrypt.toString('base64');
+    strEncrypt = strEncrypt.replace('/\+/g', '-');
+    strEncrypt = strEncrypt.replace('/\//g', '_');
 
     console.log('[CALLBACK] EncryptString, string:');
     console.log(strEncrypt);
@@ -85,8 +87,10 @@ const DecryptString = exports.DecryptString = (param) => {
     console.log('[CALL] DecryptString, param:');
     console.log(param);
     
-    const decipher = crypto.createDecipheriv('aes-256-cbc', CRYPTO_AES_KEY, CRYPTO_IV);
-    const strDecrypt = Buffer.concat([decipher.update(param, 'base64'), decipher.final()]).toString('utf-8');
+    let strDecrypt = param.replace('/\-/g', '+');
+    strDecrypt = strDecrypt.replace('/\_/g', '/');
+    strDecrypt = new Buffer(strDecrypt, 'base64');
+    strDecrypt = strDecrypt.toString('utf-8');
 
     console.log('[CALLBACK] DecryptString, string:');
     console.log(strDecrypt);
