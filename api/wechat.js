@@ -224,3 +224,21 @@ const MpQrcodeCreate = exports.MpQrcodeCreate = (param, callback) => {
     });
 }
 
+const MpGetUserInfo = exports.MpGetUserInfo = (param, callback) => {
+    console.log('[CALL] MpGetUserInfo, param:');
+    console.log(param);
+
+    let url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' + param.token;
+    url += '&openid=' + param.openId;
+    url += '&lang=zh_CN';
+
+    toolHelper.GetJson({ url: url }, function(err, result) {
+        result = JSON.parse(result);
+        if( err ) {
+            callback(err || new Error('get return is error'));
+        } else {
+            callback(null, result);
+        }
+    });
+}
+

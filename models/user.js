@@ -47,12 +47,41 @@ const WechatLogin = exports.WechatLogin = (param, callback) => {
                     wechatId: param.wechatId
                 },
                 info: {
-                    signType: 'WECHAT'
+                    signType: 'WECHAT',
+                    tags: ['微信']
                 }
             }, callback);
         } else {
             user.info.lastDate = new Date();
             user.info.loginTimes += 1;
+            user.save(callback);
+        }
+    });
+}
+
+const UpdateUserInfo = exports.UpdateUserInfo = (param, callback) => {
+    if( !param
+        || !param.userId ) {
+        return callback(new Error('UpdateUserInfo: param is error'));
+    }
+
+    userModel.findById(param.userId)
+    .exec(function (err, user) {
+        if( err ) {
+            callback(new Error('UpdateUserInfo: can not find'));
+        } else {
+            user.info.nickname = param.nickname;
+            user.info.sex = param.sex;
+            user.info.city = param.city;
+            user.info.province = param.province;
+            user.info.country = param.country;
+            if( user.info.sex == 1 ){
+                user.info.tags.push('男');
+            } else if( user.info.sex == 2 ){
+                user.info.tags.push('女');
+            }
+            user.info.tags.push(user.info.city);
+            user.info.tags.push(user.info.province);
             user.save(callback);
         }
     });
