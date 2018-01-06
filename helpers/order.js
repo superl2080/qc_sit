@@ -129,23 +129,23 @@ const CreatePointOrder = exports.CreatePointOrder = (param, callback) => {
         CancelUserPointOrder: (callback) => {
             console.log('[CALL] CreatePointOrder, CancelUserPointOrder');
             pointOrderModel.CancelOnePointOrder({
-                userId: params.user._id
+                userId: param.user._id
             }, callback);
         },
 
         CreatePointOrder: ['CancelUserPointOrder', (result, callback) => {
             console.log('[CALL] CreatePointOrder, CreatePointOrder');
             pointOrderModel.CreatePointOrder({
-                userId: params.user._id,
-                pointId: params.point._id,
-                payout: params.point.deployInfo.payout
+                userId: param.user._id,
+                pointId: param.point._id,
+                payout: param.point.deployInfo.payout
             }, callback);
         }],
 
         GetUserSubscribeAppids: ['CreatePointOrder', (result, callback) => {
             console.log('[CALL] CreatePointOrder, GetUserSubscribeAppids');
             tradeAdModel.GetUserTradeAds({
-                userId: params.user._id
+                userId: param.user._id
             }, (err, tradeAds) => {
                 let appids = new Array();
                 if( !err ){
@@ -161,13 +161,13 @@ const CreatePointOrder = exports.CreatePointOrder = (param, callback) => {
             console.log('[CALL] CreatePointOrder, PointOrderDeliverAd');
             adModel.DeliverAd({
                 appids: result.GetUserSubscribeAppids,
-                user: params.user,
-                partnerId: params.point.partnerId
+                user: param.user,
+                partnerId: param.point.partnerId
             }, (err, ad) => {
                 if( err ){
-                    if( params.point.state == 'TEST' ){
+                    if( param.point.state == 'TEST' ){
                         TestPointOrderDeliverAd({
-                            userId: params.user._id,
+                            userId: param.user._id,
                             pointOrder: result.CreatePointOrder
                         }, callback);
                     } else {
@@ -176,14 +176,14 @@ const CreatePointOrder = exports.CreatePointOrder = (param, callback) => {
                 } else {
                     PointOrderDeliverAd({
                         ad: ad,
-                        userId: params.user._id,
+                        userId: param.user._id,
                         appids: result.GetUserSubscribeAppids,
                         pointOrder: result.CreatePointOrder
                     }, (err, pointOrder) => {
                         if( err ){
-                            if( params.point.state == 'TEST' ){
+                            if( param.point.state == 'TEST' ){
                                 TestPointOrderDeliverAd({
-                                    userId: params.user._id,
+                                    userId: param.user._id,
                                     pointOrder: result.CreatePointOrder
                                 }, callback);
                             } else {
