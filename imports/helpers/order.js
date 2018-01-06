@@ -149,7 +149,7 @@ const CreatePointOrder = exports.CreatePointOrder = (param, callback) => {
             }, (err, tradeAds) => {
                 let appids = new Array();
                 if( !err ){
-                    tradeAds.forEach((tradeAd, i){
+                    tradeAds.forEach((tradeAd, i) => {
                         appids[i] = tradeAd.appid;
                     });
                 }
