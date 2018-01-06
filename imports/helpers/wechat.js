@@ -158,8 +158,8 @@ const GetMpToken = exports.GetMpToken = (param, callback) => {
                             adModel.RefreshWechatMpAuthInfo({
                                 adId: param.ad._id,
                                 access_token: result.authorizer_access_token,
-                                expires_in: toolHelper.CreateExpiresInDate(result.expires_in)
-                                refresh_token: result.authorizer_refresh_token,
+                                expires_in: toolHelper.CreateExpiresInDate(result.expires_in),
+                                refresh_token: result.authorizer_refresh_token
                             }, (err, ad) => {
                                 console.log('[CALLBACK] GetMpToken');
                                 callback(err, result.authorizer_access_token);
