@@ -5,6 +5,7 @@ const tradeAdModel = require('../models/tradeAd');
 const tradePayModel = require('../models/tradePay');
 const partnerModel = require('../models/partner');
 const pointOrderModel = require('../models/pointOrder');
+const wechatHelper = require('../helpers/wechat');
 const serviceApi = require('../api/service');
 const qrcodeApi = require('../api/qrcode');
 const wechatApi = require('../api/wechat');
