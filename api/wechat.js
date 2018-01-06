@@ -41,10 +41,10 @@ const PayCreatePrepay = exports.PayCreatePrepay = (param, callback) => {
         spbill_create_ip: param.spbill_create_ip,
         out_trade_no: param.out_trade_no,
         total_fee: param.total_fee,
-        appid = WECHAT_MP_APP_ID;
-        mch_id = WECHAT_PAY_ID;
-        nonce_str = cryptHelper.RandomBytes(16);
-        trade_type = 'JSAPI';
+        appid: WECHAT_MP_APP_ID,
+        mch_id: WECHAT_PAY_ID,
+        nonce_str: cryptHelper.RandomBytes(16),
+        trade_type: 'JSAPI'
     };
     prepayJson.sign = cryptHelper.WechatPaySign(prepayJson);
 
