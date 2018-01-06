@@ -298,8 +298,8 @@ const FinishPay = exports.FinishPay = (param, callback) => {
                 userId: result.GetOpenPointOrder.userId,
                 partnerId: result.GetPointById.partnerId,
                 payout: result.GetOpenPointOrder.payout,
-                income: result.GetPartnerById.income
-                total_fee: rparam.total_fee,
+                income: result.GetPartnerById.income,
+                total_fee: param.total_fee
             };
             if( param.transaction_id ) { newTradePay.transaction_id = param.transaction_id; }
             tradePayModel.CreateTradePay(newTradePay, callback);
