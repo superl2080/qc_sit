@@ -87,9 +87,9 @@ const DecryptString = exports.DecryptString = (param) => {
     console.log('[CALL] DecryptString, param:');
     console.log(param);
     
-    param = param.replace('/\-/g', '+');
-    param = param.replace('/\_/g', '/');
-    const strDecrypt = new Buffer(param, 'base64')
+    let strDecrypt = param.replace('/\-/g', '+');
+    strDecrypt = strDecrypt.replace('/\_/g', '/');
+    strDecrypt = new Buffer(strDecrypt, 'base64');
     strDecrypt = strDecrypt.toString('utf-8');
 
     console.log('[CALLBACK] DecryptString, string:');
