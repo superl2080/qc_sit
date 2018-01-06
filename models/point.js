@@ -49,10 +49,6 @@ const GetPointById = exports.GetPointById = (param, callback) => {
 }
 
 const GetDeployPoints = exports.GetDeployPoints = (param, callback) => {
-    if( !param ) {
-        return callback(new Error('GetDeployPoints: param is error'));
-    }
-
     pointModel.find({
         state: { $in: ['DEPLOY', 'TEST'] }
     }, callback);
