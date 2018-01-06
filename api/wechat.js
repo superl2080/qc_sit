@@ -63,7 +63,7 @@ const PayCreatePrepay = exports.PayCreatePrepay = (param, callback) => {
                 nonceStr: cryptHelper.RandomBytes(16),
                 package: 'prepay_id=' + result.prepay_id,
                 signType: 'MD5',
-                timeStamp: toolHelper.CreateTimeStamp(new Date());
+                timeStamp: toolHelper.CreateTimeStamp(new Date())
             };
             prepayResult.paySign = cryptHelper.WechatPaySign(prepayResult);
             callback(null, prepayResult);
