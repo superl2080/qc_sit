@@ -6,6 +6,44 @@ const wechatApi = require('../api/wechat');
 const toolHelper = require('./tool');
 
 
+const UpdateUserInfo = exports.UpdateUserInfo = (param, callback) => {
+    
+    async.auto({
+        GetMpToken: (callback) => {
+            console.log('[CALL] UpdateUserInfo, GetMpToken');
+            GetMpToken({
+                ad: param.ad
+            }, callback);
+        },
+
+        GetUserInfo: ['GetMpToken', (result, callback) => {
+            console.log('[CALL] UpdateUserInfo, GetUserInfo');
+
+            wechatApi.MpGetUserInfo({
+                openId: param.openId,
+                token: result.GetMpToken,
+            }, callback);
+        }],
+
+        UpdateUserInfo: ['GetUserInfo', (result, callback) => {
+            console.log('[CALL] UpdateUserInfo, UpdateUserInfo');
+
+            userModel.UpdateUserInfo({
+                userId: param.userId,
+                nickname: result.GetUserInfo.nickname,
+                sex: result.GetUserInfo.sex,
+                city: result.GetUserInfo.city,
+                province: result.GetUserInfo.province,
+                country: result.GetUserInfo.country
+            }, callback);
+        }]
+
+    }, (err, result) => {
+        console.log('[CALLBACK] UpdateUserInfo');
+        callback(err);
+    });
+}
+
 const CreatePreAuthCode = exports.CreatePreAuthCode = (param, callback) => {
     
     async.auto({
