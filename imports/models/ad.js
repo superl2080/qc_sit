@@ -268,20 +268,20 @@ const GetWechatMpAuthInfo = exports.GetWechatMpAuthInfo = (param, callback) => {
     });
 }
 
-const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback) => {
+const RefreshWechatMpAuthInfo = exports.RefreshWechatMpAuthInfo = (param, callback) => {
     if( !param
         || !param.adId
         || !param.access_token
         || !param.expires_in
         || !param.refresh_token ) {
-        return callback(new Error('UpdateWechatMpAuthInfo: param is error'));
+        return callback(new Error('RefreshWechatMpAuthInfo: param is error'));
     }
 
     adModel.findById(param.adId)
     .exec(function (err, ad) {
         if( err
             || !ad ) {
-            callback(err || new Error('UpdateWechatMpAuthInfo: ad is empty'));
+            callback(err || new Error('RefreshWechatMpAuthInfo: ad is empty'));
         } else {
             ad.wechatMpAuthInfo.access_token = param.access_token;
             ad.wechatMpAuthInfo.expires_in = param.expires_in;
