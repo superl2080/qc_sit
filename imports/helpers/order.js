@@ -106,7 +106,7 @@ const TestPointOrderDeliverAd = exports.TestPointOrderDeliverAd = (param, callba
 
         GetQrcodeImageUrl: ['GetQrcode', (result, callback) => {
             console.log('[CALL] TestPointOrderDeliverAd, GetQrcodeImageUrl');
-            qrcodeApi.GetQrcodeImageUrl({ url: results.GetQrcode.url }, callback);
+            qrcodeApi.GetQrcodeImageUrl({ url: result.GetQrcode.url }, callback);
         }]
 
     }, (err, result) => {
