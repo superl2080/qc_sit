@@ -122,11 +122,10 @@ const OpenRefreshAuth = exports.OpenRefreshAuth = (param, callback) => {
             authorizer_refresh_token: param.refresh_token
         }
     }, function(err, result) {
-        if( err 
-            || !result.authorizer_info ) {
+        if( err ) {
             callback(err || new Error('post return is error'));
         } else {
-            callback(null, result.authorizer_info);
+            callback(null, result);
         }
     });
 }
