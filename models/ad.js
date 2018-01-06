@@ -16,7 +16,7 @@ const adSchema = new mongoose.Schema({
     deliverInfo: {
         payout:             { $type: Number,             required: true },
         income:             { $type: Number,             required: true },
-        priority:           { $type: Number,             required: true },
+        priority:           { $type: Number,             default: 10 },
         count:              Number,
         partnerType:        { $type: String,             default: 'ALL' }, //'ALL', 'WHITE', 'BLACK'
         partnerIds:         [ ObjectId ],
@@ -57,15 +57,14 @@ try {
 const CreateAuthAd = exports.CreateAuthAd = (param, callback) => {
     if( !param
         || !param.aderId ) {
-        returncallback(new Error('CreateAuthAd: param is error'));
+        return callback(new Error('CreateAuthAd: param is error'));
     }
 
     aderModel.GetAderById({ aderId: param.aderId }, (err, ader) => {
         if( err
             || !ader
             || ader.balance <= 0 ) {
-            callback(err || new Error('CreateAuthAd: ader is not OK'));
-            return ;
+            return callback(err || new Error('CreateAuthAd: ader is not OK'));
         }
 
         adModel.create({ 
@@ -158,8 +157,7 @@ const UpdateWechatMpAuthInfo = exports.UpdateWechatMpAuthInfo = (param, callback
 
 const CancelAdWechatMpAuthInfo = exports.CancelAdWechatMpAuthInfo = (appid, callback) => {
     if( !appid ) {
-        callback(new Error('CancelAdWechatMpAuthInfo: appid is error'));
-        return ;
+        return callback(new Error('CancelAdWechatMpAuthInfo: appid is error'));
     }
 
     adModel.findOne({ 'wechatMpAuthInfo.appid': appid, state: { $in: ['OPEN', 'DELIVER'] } })
