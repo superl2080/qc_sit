@@ -42,8 +42,10 @@ app.use('/', main.router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    const err = new Error('Not Found');
-    err.status = 404;
+    if ( !res.headersSent ) {
+        const err = new Error('Not Found');
+        err.status = 404;
+    }
     next(err);
 });
 
@@ -52,7 +54,7 @@ app.use(function(err, req, res, next) {
     // set locals, only providing error in development
     err.status = err.status || 500;
     console.error(err);
-    if (res.headersSent) {
+    if ( res.headersSent ) {
         return next(err);
     }
     // render the error page

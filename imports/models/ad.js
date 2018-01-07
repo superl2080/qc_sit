@@ -11,7 +11,7 @@ const adSchema = new mongoose.Schema({
     isDefault:              { $type: Boolean,            default: false },
     aderId:                 { $type: ObjectId,           required: true, index: true },
     type:                   { $type: String,             required: true }, //'WECHAT_MP_AUTH', 'WECHAT_MP_API'
-    state:                  { $type: String,             default: 'CREATE' }, //'CREATE', 'OPEN', 'DELIVER', 'SUCESS', 'CANCEL'
+    state:                  { $type: String,             default: 'CREATE' }, //'CREATE', 'OPEN', 'DELIVER', 'SUCESS', 'CANCEL', 'NO_BALANCE'
 
     deliverInfo: {
         payout:             { $type: Number,             required: true },
