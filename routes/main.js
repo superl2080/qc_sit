@@ -524,7 +524,7 @@ function CreateDeviceOrder(params, callback) {
         params.req.session.pointOrder = result.pointOrder;
         if( result.pointOrder.adInfo ) {
             params.req.session.flow.activityInfo = {
-                qrcodeUrl: result.pointOrder.adInfo.qrcodeUrl
+                qrcodeUrl: result.pointOrder.adInfo.qrcode_url
             };
         }
     });
