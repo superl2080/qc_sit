@@ -78,12 +78,12 @@ const CreateAuthAd = exports.CreateAuthAd = (param, callback) => {
     });
 }
 
-const GetDefaultAd = exports.GetDefaultAd = (param, callback) => {
+const DeliverDefaultAd = exports.DeliverDefaultAd = (param, callback) => {
     adModel.findOne({ isDefault: true })
     .exec((err, ad) => {
         if( err
             || !ad ) {
-            callback(err || new Error('GetDefaultAd: ad is empty'));
+            callback(err || new Error('DeliverDefaultAd: ad is empty'));
         } else {
             callback(null, ad);
         }
