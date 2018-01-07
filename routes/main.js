@@ -6,6 +6,7 @@ var userModel = require('../imports/models/user');
 var adModel = require('../imports/models/ad');
 var pointModel = require('../imports/models/point');
 var pointOrderModel = require('../imports/models/pointOrder');
+var systemConfigModel = require('../imports/models/systemConfig');
 var tradePayModel = require('../imports/models/tradePay');
 var cryptHelper = require('../imports/helpers/crypt');
 var wechatHelper = require('../imports/helpers/wechat');
@@ -524,8 +525,23 @@ function CreateDeviceOrder(params, callback) {
         params.req.session.pointOrder = result.pointOrder;
         if( result.pointOrder.adInfo ) {
             params.req.session.flow.activityInfo = {
+                auth: result.pointOrder.adInfo.auth,
                 qrcodeUrl: result.pointOrder.adInfo.qrcode_url
             };
+            if(!result.pointOrder.adInfo.auth) {
+                systemConfigModel.GetWechatOpen(null, (err, wechatOpen) => {
+                    if( !err ) {
+                        params.req.session.flow.activityInfo.auto_reply = wechatOpen.auto_reply;
+                        callback(null);
+                    } else {
+                        callback(err);
+                    }
+                });
+            } else {
+                callback(null);
+            }
+        } else {
+            callback(null);
         }
     });
 
