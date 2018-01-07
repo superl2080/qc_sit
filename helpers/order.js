@@ -18,7 +18,7 @@ const PointOrderDeliverAd = exports.PointOrderDeliverAd = (param, callback) => {
     }
 
     if( param.ad.type == 'WECHAT_MP_AUTH' ){
-        adInfo.qrcode_url = param.ad.wechatMpAuthInfo.qrcode_url;
+        adInfo.qrcode_url = 'http://read.html5.qq.com/image?src=forum&q=5&r=0&imgflag=7&imageUrl=' + param.ad.wechatMpAuthInfo.qrcode_url;
         adInfo.appid = param.ad.wechatMpAuthInfo.appid;
         adInfo.auth = false;
         async.auto({
