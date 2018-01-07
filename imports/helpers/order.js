@@ -319,7 +319,7 @@ const FinishPay = exports.FinishPay = (param, callback) => {
                 payInfo: {
                     type: 'PAY',
                     lastDate: new Date(),
-                    tradeAdId: result.CreateTradePay._id
+                    tradePayId: result.CreateTradePay._id
                 }
             }, callback);
         }]
