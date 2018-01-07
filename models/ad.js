@@ -11,7 +11,7 @@ const adSchema = new mongoose.Schema({
     isDefault:              { $type: Boolean,            default: false },
     aderId:                 { $type: ObjectId,           required: true, index: true },
     type:                   { $type: String,             required: true }, //'WECHAT_MP_AUTH', 'WECHAT_MP_API'
-    state:                  { $type: String,             default: 'CREATE' }, //'CREATE', 'OPEN', 'DELIVER', 'SUCESS', 'CANCEL'
+    state:                  { $type: String,             default: 'CREATE' }, //'CREATE', 'OPEN', 'DELIVER', 'SUCESS', 'CANCEL', 'NO_BALANCE'
 
     deliverInfo: {
         payout:             { $type: Number,             required: true },
@@ -173,15 +173,13 @@ const CancelAdWechatMpAuthInfo = exports.CancelAdWechatMpAuthInfo = (appid, call
 }
 
 const DeliverAd = exports.DeliverAd = (param, callback) => {
-    if( !param
-        || !param.adId ) {
+    if( !param ) {
         return callback(new Error('DeliverAd: param is error'));
     }
 
     adModel.find({ state: 'DELIVER' })
-    .gt('count', 0)
+    .gt('deliverInfo.count', 0)
     .nin('wechatMpAuthInfo.appid', param.appids)
-    .sort('-deliverInfo.priority createDate')
     .$where(function () {
         if( this.deliverInfo.partnerType == 'WHITE' ){
             return this.deliverInfo.partnerIds.indexOf(param.partnerId) >= 0;
@@ -191,6 +189,7 @@ const DeliverAd = exports.DeliverAd = (param, callback) => {
             return true;
         }
     })
+    .sort('-deliverInfo.priority createDate')
     .exec(function (err, ads) {
         if( err
             || !ads ) {
@@ -210,10 +209,10 @@ const aderDeliverAd = (param, callback) => {
         payout: param.ads[param.i].deliverInfo.payout
     }, (err, result) => {
         if( err
-            && param.i + 1 < ads.length ){
+            && param.i + 1 < param.ads.length ){
             aderDeliverAd({
                 i: param.i + 1,
-                ads: ads
+                ads: param.ads
             }, callback);
         } else if( err ){
             callback(err);

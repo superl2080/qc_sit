@@ -47,7 +47,7 @@ const CreatePointOrder = exports.CreatePointOrder = (param, callback) => {
         return callback(new Error('CreatePointOrder: param is error'));
     }
 
-    pointModel.create({ 
+    pointOrderModel.create({ 
         userId: param.userId,
         pointId: param.pointId,
         payout: param.payout

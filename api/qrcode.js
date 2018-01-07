@@ -19,7 +19,7 @@ const GetQrcodeImageUrl = exports.GetQrcodeImageUrl = (param, callback) => {
             callback(err || new Error('GetQrcodeImageUrl: callback error'));
         } else {
             var $ = cheerio.load(result);
-            callback(null, $('img').attr('src'));
+            callback(null, 'http:' + $('img').attr('src'));
         }
     });
 }

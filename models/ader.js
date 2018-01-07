@@ -46,8 +46,7 @@ const GetAderById = exports.GetAderById = (param, callback) => {
 
 const DeliverAd = exports.DeliverAd = (param, callback) => {
     if( !param
-        || !param.aderId
-        || !param.payout ) {
+        || !param.aderId ) {
         return callback(new Error('DeliverAd: param is error'));
     }
 
@@ -69,8 +68,7 @@ const DeliverAd = exports.DeliverAd = (param, callback) => {
 
 const CancelAd = exports.CancelAd = (param, callback) => {
     if( !param
-        || !param.aderId
-        || !param.payout ) {
+        || !param.aderId ) {
         return callback(new Error('CancelAd: param is error'));
     }
 
