@@ -12,9 +12,9 @@ const DeliverChannelAd = exports.DeliverChannelAd = (param, callback) => {
     console.log(param);
 
     let url = '';
-    if( param.channerl == 'YOUFENTONG') {
+    if( param.channel == 'YOUFENTONG') {
         url = YOUFENTONG_DELIVER_URL;
-    } else if( param.channerl == 'YUNDAI') {
+    } else if( param.channel == 'YUNDAI') {
         url = YUNDAI_DELIVER_URL;
     } else {
         callback(new Error('DeliverChannelAd: param is error'));
