@@ -196,7 +196,7 @@ function HandleError(params, err) {
 
     } else {
         params.req.session.destroy(function(err) {
-            params.res.render('frame-error', {error: {message: '服务器发生未知错误', status: '抱歉，请稍等片刻后重新使用操作。如还有问题，请联系工作人员。'}});
+            params.res.redirect('/home');
         })
     }
 }
