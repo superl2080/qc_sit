@@ -303,6 +303,7 @@ const FinishPay = exports.FinishPay = (param, callback) => {
                 partnerId: result.GetPointById.partnerId,
                 payout: result.GetOpenPointOrder.payout,
                 income: result.GetPartnerById.income,
+                type: 'WECHAT',
                 total_fee: param.total_fee
             };
             if( param.transaction_id ) { newTradePay.transaction_id = param.transaction_id; }
