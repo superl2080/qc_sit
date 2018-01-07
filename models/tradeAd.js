@@ -39,10 +39,8 @@ const CreateTradeAd = exports.CreateTradeAd = (param, callback) => {
         || !param.adId
         || !param.aderId
         || !param.partnerId
-        || !param.payout
-        || !param.income
         || !param.appid ) {
-        returncallback(new Error('CreateTradeAd: param is error'));
+        return callback(new Error('CreateTradeAd: param is error'));
     }
 
     let newTradeAd = { 
