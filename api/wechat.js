@@ -43,7 +43,7 @@ const PayCreatePrepay = exports.PayCreatePrepay = (param, callback) => {
         total_fee: param.total_fee,
         appid: WECHAT_MP_APP_ID,
         mch_id: WECHAT_PAY_ID,
-        nonce_str: cryptHelper.RandomBytes(16),
+        nonce_str: cryptHelper.RandomBytes(16).toString(),
         trade_type: 'JSAPI'
     };
     prepayJson.sign = cryptHelper.WechatPaySign(prepayJson);
@@ -60,7 +60,7 @@ const PayCreatePrepay = exports.PayCreatePrepay = (param, callback) => {
         } else {
             let prepayResult = {
                 appId: WECHAT_MP_APP_ID,
-                nonceStr: cryptHelper.RandomBytes(16),
+                nonceStr: cryptHelper.RandomBytes(16).toString(),
                 package: 'prepay_id=' + result.prepay_id,
                 signType: 'MD5',
                 timeStamp: toolHelper.CreateTimeStamp(new Date())
