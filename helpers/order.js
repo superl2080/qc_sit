@@ -48,7 +48,7 @@ const PointOrderDeliverAd = exports.PointOrderDeliverAd = (param, callback) => {
 
             GetQrcodeImageUrl: ['GetQrcode', (result, callback) => {
                 console.log('[CALL] PointOrderDeliverAd, GetQrcodeImageUrl');
-                qrcodeApi.GetQrcodeImageUrl({ url: results.GetQrcode.url }, callback);
+                qrcodeApi.GetQrcodeImageUrl({ url: result.GetQrcode.url }, callback);
             }]
 
         }, (err, result) => {
