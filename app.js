@@ -40,17 +40,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', main.router);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    if ( !res.headersSent ) {
-        const err = new Error('Not Found');
-        err.status = 404;
-    }
-    next(err);
-});
 
 // error handler
 app.use(function(err, req, res, next) {
+
+    // catch 404 and forward to error handler
+    if ( !err ) {
+        err = new Error('Not Found');
+        err.status = 404;
+    }
+
     // set locals, only providing error in development
     err.status = err.status || 500;
     console.error(err);
