@@ -415,6 +415,11 @@ router.get('/subscribe/:appid', function(req, res, next) {
         appid: req.params.appid
     };
 
+    var option = {
+        req: req,
+        res: res
+    };
+
     async.auto({
         CheckLogin: async.apply(UserLogin, option),
     }, function(err, results) {
