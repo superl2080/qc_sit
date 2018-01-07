@@ -50,7 +50,7 @@ const PayCreatePrepay = exports.PayCreatePrepay = (param, callback) => {
 
     toolHelper.PostXml({
         url: 'https://api.mch.weixin.qq.com/pay/unifiedorder',
-        xml: cryptHelper.GetXmlFromJson(prepayJson)
+        xml: prepayJson
     }, function(err, result) {
         if( err 
             || result.return_code != 'SUCCESS'
