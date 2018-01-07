@@ -209,10 +209,10 @@ const aderDeliverAd = (param, callback) => {
         payout: param.ads[param.i].deliverInfo.payout
     }, (err, result) => {
         if( err
-            && param.i + 1 < ads.length ){
+            && param.i + 1 < param.ads.length ){
             aderDeliverAd({
                 i: param.i + 1,
-                ads: ads
+                ads: param.ads
             }, callback);
         } else if( err ){
             callback(err);
