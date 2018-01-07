@@ -126,7 +126,7 @@ const CancelOnePointOrder = exports.CancelOnePointOrder = (param, callback) => {
         } else if( pointOrder.adInfo ){
             adModel.CancelAd({ adId: pointOrder.adInfo.adId }, (err, result) => {
                 if( err ){
-                    callback(err, result);
+                    callback(err, pointOrder);
                 } else {
                     callback(null, pointOrder);
                 }

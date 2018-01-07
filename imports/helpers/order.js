@@ -18,7 +18,7 @@ const PointOrderDeliverAd = exports.PointOrderDeliverAd = (param, callback) => {
     }
 
     if( param.ad.type == 'WECHAT_MP_AUTH' ){
-        adInfo.qrcode_url = param.ad.wechatMpAuthInfo.qrcode_url;
+        adInfo.qrcode_url = 'http://open.weixin.qq.com/qr/code?username=' + param.ad.wechatMpAuthInfo.user_name;
         adInfo.appid = param.ad.wechatMpAuthInfo.appid;
         adInfo.auth = false;
         async.auto({
