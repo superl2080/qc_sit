@@ -173,8 +173,7 @@ const CancelAdWechatMpAuthInfo = exports.CancelAdWechatMpAuthInfo = (appid, call
 }
 
 const DeliverAd = exports.DeliverAd = (param, callback) => {
-    if( !param
-        || !param.adId ) {
+    if( !param ) {
         return callback(new Error('DeliverAd: param is error'));
     }
 

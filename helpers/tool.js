@@ -82,7 +82,6 @@ const GetJson = exports.GetJson = (param, callback) => {
     console.log(option);
     request.get(option, (err, ret, body) => {
         console.log('[CALLBACK] GetJson, get return:');
-        console.log(body);
         if( err 
             || !ret.statusCode
             || ret.statusCode != 200
