@@ -44,6 +44,7 @@ const CreateTradePay = exports.CreateTradePay = (param, callback) => {
         partnerId: param.partnerId,
         payout: param.payout,
         income: param.income,
+        type: param.type,
         wechatInfo: {
             total_fee: param.total_fee
         }
