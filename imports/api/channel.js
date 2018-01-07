@@ -3,8 +3,8 @@ const toolHelper = require('../helpers/tool');
 
 const YOUFENTONG_DELIVER_URL = 'http://admintest.51qingcheng.com/test/100';
 const YOUFENTONG_SUBSCRIBE_URL = 'http://admintest.51qingcheng.com/test/101';
-const YUNDAI_DELIVER_URL = 'http://admintest.51qingcheng.com/test/100';
-const YUNDAI_SUBSCRIBE_URL = 'http://admintest.51qingcheng.com/test/101';
+const YUNDAI_DELIVER_URL = 'http://admintest.51qingcheng.com/test/102';
+const YUNDAI_SUBSCRIBE_URL = 'http://admintest.51qingcheng.com/test/103';
 
 
 const DeliverChannelAd = exports.DeliverChannelAd = (param, callback) => {
