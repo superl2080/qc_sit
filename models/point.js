@@ -45,13 +45,29 @@ const GetPointById = exports.GetPointById = (param, callback) => {
         return callback(new Error('GetPointById: param is error'));
     }
 
-    pointModel.findById(param.pointId, callback);
+    pointModel.findById(param.pointId)
+    .exec((err, point) => {
+        if( err
+            || !point ) {
+            callback(err || new Error('GetPointById: point is empty'));
+        } else {
+            callback(null, point);
+        }
+    });
 }
 
 const GetDeployPoints = exports.GetDeployPoints = (param, callback) => {
     pointModel.find({
         state: { $in: ['DEPLOY', 'TEST'] }
-    }, callback);
+    })
+    .exec((err, points) => {
+        if( err
+            || !points ) {
+            callback(err || new Error('GetDeployPoints: points is empty'));
+        } else {
+            callback(null, points);
+        }
+    });
 }
 
 const UpdateZhijinji = exports.UpdateZhijinji = (param, callback) => {

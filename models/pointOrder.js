@@ -68,7 +68,15 @@ const GetPointOrder = exports.GetPointOrder = (param, callback) => {
         option.state = param.state;
     }
 
-    pointOrderModel.findOne(option, callback);
+    pointOrderModel.findOne(option)
+    .exec((err, pointOrder) => {
+        if( err
+            || !pointOrder ) {
+            callback(err || new Error('GetPointOrder: pointOrder is empty'));
+        } else {
+            callback(null, pointOrder);
+        }
+    });
 }
 
 const DeliverAd = exports.DeliverAd = (param, callback) => {
@@ -79,7 +87,7 @@ const DeliverAd = exports.DeliverAd = (param, callback) => {
     }
 
     pointOrderModel.findById(param.pointOrderId)
-    .exec(function (err, pointOrder) {
+    .exec((err, pointOrder) => {
         if( err
             || !pointOrder ) {
             callback(err || new Error('DeliverAd: pointOrder is empty'));
@@ -101,7 +109,15 @@ const SubscribePointOrder = exports.SubscribePointOrder = (param, callback) => {
         userId: param.userId,
         state: 'OPEN',
         'adInfo.appid': param.appid
-    }, callback);
+    })
+    .exec((err, pointOrder) => {
+        if( err
+            || !pointOrder ) {
+            callback(err || new Error('SubscribePointOrder: can not find'));
+        } else {
+            callback(null, pointOrder);
+        }
+    });
 }
 
 const CancelOnePointOrder = exports.CancelOnePointOrder = (param, callback) => {
@@ -156,7 +172,7 @@ const FinishPointOrder = exports.FinishPointOrder = (param, callback) => {
     }
 
     pointOrderModel.findById(param.pointOrderId)
-    .exec(function (err, pointOrder) {
+    .exec((err, pointOrder) => {
         if( err
             || !pointOrder ) {
             callback(err || new Error('FinishPointOrder: pointOrder is empty'));

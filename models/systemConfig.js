@@ -26,7 +26,7 @@ try {
 const GetWechatOpen = exports.GetWechatOpen = (param, callback) => {
 
     systemConfigModel.findOne({ })
-    .exec(function (err, systemConfig) {
+    .exec((err, systemConfig) => {
         if( err
             || !systemConfig
             || !systemConfig.wechatOpen ) {
@@ -43,7 +43,7 @@ const UpdateWechatOpenTicket = exports.UpdateWechatOpenTicket = (newTicket, call
     }
 
     systemConfigModel.findOne({ })
-    .exec(function (err, systemConfig) {
+    .exec((err, systemConfig) => {
         if( err
             || !systemConfig ) {
             systemConfigModel.create({
@@ -66,7 +66,7 @@ const UpdateWechatOpenToken = exports.UpdateWechatOpenToken = (param, callback) 
     }
 
     systemConfigModel.findOne({ })
-    .exec(function (err, systemConfig) {
+    .exec((err, systemConfig) => {
         if( err
             || !systemConfig ) {
             callback(err || new Error('UpdateWechatOpenToken: systemConfig is empty'));
