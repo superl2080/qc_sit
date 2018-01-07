@@ -77,7 +77,7 @@ const PointOrderDeliverAd = exports.PointOrderDeliverAd = (param, callback) => {
 
             if( adInfo.auth ) {
                 qrcodeApi.GetQrcodeImageUrl({
-                    url: result.GetQrcode.url 
+                    url: result.qrcode_url
                 }, (err, result) => {
                     adInfo.qrcode_url = result.qrcode_url;
                     pointOrderModel.DeliverAd({
