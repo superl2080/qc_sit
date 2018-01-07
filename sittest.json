@@ -1,7 +1,7 @@
 {
     "apps": [
         {
-            "name": "sit_test",
+            "name": "sittest",
             "script": "./bin/www",
             "instances": "max",
             "exec_mode": "cluster",
@@ -14,8 +14,8 @@
                 "WECHAT_OPEN_APP_SECRET": "2d02bf96c35695b001db3c053c2b0abf",
                 "WECHAT_OPEN_ENCODE_KEY": "2c3a4d54806a9f9442c6f5ebf10a1e53wx1676ae64c",
                 "WECHAT_OPEN_MESSAGE_TOKEN": "51qingcheng",
-                "SIT_URL": "http://sit_test.51qingcheng.com",
-                "SERVICE_URL": "http://service_test.51qingcheng.com",
+                "SIT_URL": "http://sittest.51qingcheng.com",
+                "SERVICE_URL": "http://servicetest.51qingcheng.com",
                 "PORT": 3101,
                 "MONGO_URL": "mongodb://localhost/qingcheng_test",
                 "NODE_ENV": "test"
