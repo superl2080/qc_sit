@@ -13,7 +13,7 @@ const GetQrcodeImageUrl = exports.GetQrcodeImageUrl = (param, callback) => {
     }
 
     toolHelper.GetJson({
-        url: 'https://cli.im/api/qrcode/code?text=' + param.url + '&mhid=' + mhid
+        url: 'https://cli.im/api/qrcode/code?text=' + encodeURIComponent(param.url) + '&mhid=' + mhid
     }, function(err, result) {
         if(err) {
             callback(err || new Error('GetQrcodeImageUrl: callback error'));
