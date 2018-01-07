@@ -37,11 +37,11 @@ const PasswordCompare = exports.PasswordCompare = (param) => {
 }
 
 const ParseDecryptMsg = exports.ParseDecryptMsg = (param, callback) => {
-    console.log('[CALL] ParseDecryptMsg, param:');
-    console.log(param);
+    console.log('[CALL] ParseDecryptMsg');
     
     ParseJsonFromXml(param.msg, (err, result) => {
         const decryptData = DecryptMsg(result.Encrypt);
+        console.log(decryptData);
         ParseJsonFromXml(decryptData, callback);
     });
 }
@@ -64,9 +64,10 @@ const CreateEncryptMsg = exports.CreateEncryptMsg = (param) => {
         TimeStamp: param.timestamp,
         Nonce: param.nonce
     };
+    const msgEncryptXml = GetXmlFromJsonForceCData(msgEncryptJson);
     console.log('[CALLBACK] CreateEncryptMsg, msg:');
-    console.log(msgEncryptJson);
-    return GetXmlFromJsonForceCData(msgEncryptJson);
+    console.log(msgEncryptXml);
+    return msgEncryptXml;
 }
 
 const EncryptString = exports.EncryptString = (param) => {
