@@ -83,17 +83,17 @@ const TestPointOrderDeliverAd = exports.TestPointOrderDeliverAd = (param, callba
     }
 
     async.auto({
-        GetDefaultAd: (callback) => {
-            console.log('[CALL] TestPointOrderDeliverAd, GetDefaultAd');
-            adModel.GetDefaultAd(null, callback);
+        DeliverDefaultAd: (callback) => {
+            console.log('[CALL] TestPointOrderDeliverAd, DeliverDefaultAd');
+            adModel.DeliverDefaultAd(null, callback);
         },
 
-        GetMpToken: ['GetDefaultAd', (result, callback) => {
+        GetMpToken: ['DeliverDefaultAd', (result, callback) => {
             console.log('[CALL] TestPointOrderDeliverAd, GetMpToken');
-            adInfo.adId = result.GetDefaultAd._id,
-            adInfo.appid = result.GetDefaultAd.wechatMpAuthInfo.appid;
+            adInfo.adId = result.DeliverDefaultAd._id,
+            adInfo.appid = result.DeliverDefaultAd.wechatMpAuthInfo.appid;
             wechatHelper.GetMpToken({
-                ad: result.GetDefaultAd
+                ad: result.DeliverDefaultAd
             }, callback);
         }],
 
