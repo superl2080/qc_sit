@@ -39,7 +39,8 @@ const CheckPassword = exports.CheckPassword = (param, callback) => {
 
     staffModel.findOne({ logid: param.logid })
     .exec(function (err, staff) {
-        if( !staff ) {
+        if( err 
+            || !staff ) {
             callback(new Error('can not find staff'));
         } else {
             callback(null, cryptHelper.PasswordCompare({

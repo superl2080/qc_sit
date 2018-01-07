@@ -51,7 +51,8 @@ const CheckPassword = exports.CheckPassword = (param, callback) => {
 
     partnerModel.findOne({ logid: param.logid })
     .exec(function (err, partner) {
-        if( !partner ) {
+        if( err 
+            || !partner ) {
             callback(new Error('can not find partner'));
         } else {
             callback(null, cryptHelper.PasswordCompare({
