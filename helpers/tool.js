@@ -1,5 +1,6 @@
 
 const request = require('request');
+const cryptHelper = require('./crypt');
 
 
 const CreateTimeStamp = exports.CreateTimeStamp = (date) => {
