@@ -119,21 +119,30 @@ const CancelOnePointOrder = exports.CancelOnePointOrder = (param, callback) => {
         option.createDate = { $lt: param.expiresInDate };
     }
 
-    pointOrderModel.updateOne(option, { state: 'CANCEL' }, (err, pointOrder) => {
-        if( err
-            || !pointOrder ) {
+    pointOrderModel.findOne(option)
+    .exec((err, pointOrder) => {
+        if( err ) {
             callback(null);
-        } else if( pointOrder.adInfo ){
-            adModel.CancelAd({ adId: pointOrder.adInfo.adId }, (err, result) => {
+        } else {
+            pointOrder.state = 'CANCEL';
+            pointOrder.save((err, result) => {
                 if( err ){
                     callback(err, pointOrder);
                 } else {
-                    callback(null, pointOrder);
+                    if( pointOrder.adInfo ){
+                        adModel.CancelAd({ adId: pointOrder.adInfo.adId }, (err, result) => {
+                            if( err ){
+                                callback(err, pointOrder);
+                            } else {
+                                callback(null, pointOrder);
+                            }
+                        });
+                    } else {
+                        callback(null, result);
+                    }
                 }
             });
-        } else {
-            callback(null, pointOrder);
-        }
+        } 
     });
 }
 
