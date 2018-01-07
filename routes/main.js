@@ -155,7 +155,7 @@ function HandleError(params, err) {
     console.log('[CALL] controller/HandleError, err:', err);
     if(err == 'ERROR_BROWSER') {
         params.req.session.destroy(function(err) {
-            params.res.render('frame-error', {title: '请使用微信扫描', message: '抱歉，目前仅支持微信扫描使用本产品'});
+            params.res.render('frame-error', {error: {message: '请使用微信扫描', status: '抱歉，目前仅支持微信扫描使用本产品'}});
         })
     } else if(err == 'SESSION_EXPIRED') {
         params.req.session.flow = {
@@ -169,7 +169,7 @@ function HandleError(params, err) {
 
     } else {
         params.req.session.destroy(function(err) {
-            params.res.render('frame-error', {title: '服务器发生未知错误', message: '抱歉，请稍等片刻后重新使用操作。如还有问题，请联系工作人员。'});
+            params.res.render('frame-error', {error: {message: '服务器发生未知错误', status: '抱歉，请稍等片刻后重新使用操作。如还有问题，请联系工作人员。'}});
         })
     }
 }
