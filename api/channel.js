@@ -1,20 +1,37 @@
 
-const cheerio = require('cheerio');
 const toolHelper = require('../helpers/tool');
 
+const YOUFENTONG_DELIVER_URL = 'http://admintest.51qingcheng.com/test/100';
+const YOUFENTONG_SUBSCRIBE_URL = 'http://admintest.51qingcheng.com/test/101';
+const YUNDAI_DELIVER_URL = 'http://admintest.51qingcheng.com/test/100';
+const YUNDAI_SUBSCRIBE_URL = 'http://admintest.51qingcheng.com/test/101';
 
-const GetQrcodeImageUrl = exports.GetQrcodeImageUrl = (param, callback) => {
-    console.log('[CALL] GetQrcodeImageUrl, param:');
+
+const DeliverChannelAd = exports.DeliverChannelAd = (param, callback) => {
+    console.log('[CALL] DeliverChannelAd, param:');
     console.log(param);
 
-    toolHelper.GetJson({
-        url: 'https://cli.im/api/qrcode/code?text=' + param.url + '&mhid=tUOUXlvpz50hMHctKddQPaI'
+    let url = '';
+    if( param.channerl == 'YOUFENTONG') {
+        url = YOUFENTONG_DELIVER_URL;
+    } else if( param.channerl == 'YUNDAI') {
+        url = YUNDAI_DELIVER_URL;
+    } else {
+        callback(new Error(DeliverChannelAd: param is error));
+    }
+
+    toolHelper.PostJson({
+        url: url,
+        json: {
+            userId: param.userId,
+            appids: param.appids
+        }
     }, function(err, result) {
-        if(err) {
-            callback(err || new Error('GetQrcodeImageUrl: callback error'));
+        if(err
+            || !result) {
+            callback(err || new Error('DeliverChannelAd: callback result is empty'));
         } else {
-            var $ = cheerio.load(result);
-            callback(null, $('img').attr('src'));
+            callback(null, result);
         }
     });
 }

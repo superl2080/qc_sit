@@ -10,6 +10,7 @@ const wechatHelper = require('../helpers/wechat');
 const serviceApi = require('../api/service');
 const qrcodeApi = require('../api/qrcode');
 const wechatApi = require('../api/wechat');
+const channelApi = require('../api/channel');
 
 
 const PointOrderDeliverAd = exports.PointOrderDeliverAd = (param, callback) => {
@@ -64,12 +65,33 @@ const PointOrderDeliverAd = exports.PointOrderDeliverAd = (param, callback) => {
             }, callback);
         });
 
-    } else if( param.ad.type == 'WECHAT_MP_API'
-        && param.ad.wechatMpApiInfo.channel == 'YOUFENTONG' ){
-        
-    } else if( param.ad.type == 'WECHAT_MP_API'
-        && param.ad.wechatMpApiInfo.channel == 'YUNDAI' ){
-        
+    } else if( param.ad.type == 'WECHAT_MP_API' ){
+        channelApi.DeliverChannelAd({
+            channel: param.ad.wechatMpApiInfo.channel,
+            userId: param.userId.toString(),
+            appids: param.appids
+        }, (err, result) => {
+            adInfo.auth = result.auth;
+            adInfo.appid = result.appid;
+            adInfo.qrcode_url = result.qrcode_url;
+
+            if( adInfo.auth ) {
+                qrcodeApi.GetQrcodeImageUrl({
+                    url: result.GetQrcode.url 
+                }, (err, result) => {
+                    adInfo.qrcode_url = result.qrcode_url;
+                    pointOrderModel.DeliverAd({
+                        pointOrderId: param.pointOrder._id,
+                        adInfo: adInfo
+                    }, callback);
+                });
+            } else {
+                pointOrderModel.DeliverAd({
+                    pointOrderId: param.pointOrder._id,
+                    adInfo: adInfo
+                }, callback);
+            }
+        });
     } else {
         callback(new Error('PointOrderDeliverAd: param is error'));
     }
