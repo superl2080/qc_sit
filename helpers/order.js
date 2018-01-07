@@ -25,9 +25,9 @@ const PointOrderDeliverAd = exports.PointOrderDeliverAd = (param, callback) => {
             CheckAuth: (callback) => {
                 console.log('[CALL] PointOrderDeliverAd, CheckAuth');
                 if( param.ad.wechatMpAuthInfo.auth ){
-                    callback(null);
+                    callback(null, true);
                 } else {
-                    callback(new Error('PointOrderDeliverAd: no auth'));
+                    callback(new Error('PointOrderDeliverAd: no auth'), false);
                 }
             },
 
