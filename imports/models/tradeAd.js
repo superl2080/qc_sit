@@ -71,6 +71,14 @@ const GetUserTradeAds = exports.GetUserTradeAds = (param, callback) => {
 
     tradeAdModel.find({
         userId: param.userId
-    }, callback);
+    })
+    .exec((err, tradeAds) => {
+        if( err
+            || !tradeAds ) {
+            callback(err || new Error('GetUserTradeAds: tradeAds is empty'));
+        } else {
+            callback(null, tradeAds);
+        }
+    });
 }
 

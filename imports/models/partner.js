@@ -69,11 +69,27 @@ const GetPartnerById = exports.GetPartnerById = (param, callback) => {
         return callback(new Error('GetPartnerById: param is error'));
     }
 
-    partnerModel.findById(param.partnerId, callback);
+    partnerModel.findById(param.partnerId)
+    .exec((err, partner) => {
+        if( err
+            || !partner ) {
+            callback(err || new Error('GetPartnerById: partner is empty'));
+        } else {
+            callback(null, partner);
+        }
+    });
 }
 
 const GetDefaultPartner = exports.GetDefaultPartner = (param, callback) => {
-    partnerModel.findOne({ isDefault: true }, callback);
+    partnerModel.findOne({ isDefault: true })
+    .exec((err, partner) => {
+        if( err
+            || !partner ) {
+            callback(err || new Error('GetDefaultPartner: partner is empty'));
+        } else {
+            callback(null, partner);
+        }
+    });
 }
 
 const PartnerIncome = exports.PartnerIncome = (param, callback) => {

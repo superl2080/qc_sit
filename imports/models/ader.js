@@ -30,7 +30,14 @@ try {
 
 const GetHaveBalanceAders = exports.GetHaveBalanceAders = (param, callback) => {
     aderModel.find({ balance: { $gt: 100 } })
-    .exec(callback);
+    .exec((err, aders) => {
+        if( err
+            || !aders ) {
+            callback(err || new Error('GetHaveBalanceAders: aders is empty'));
+        } else {
+            callback(null, aders);
+        }
+    });
 }
 
 const GetAderById = exports.GetAderById = (param, callback) => {
@@ -41,7 +48,14 @@ const GetAderById = exports.GetAderById = (param, callback) => {
     }
 
     aderModel.findById( param.aderId )
-    .exec(callback);
+    .exec((err, ader) => {
+        if( err
+            || !ader ) {
+            callback(err || new Error('GetAderById: ader is empty'));
+        } else {
+            callback(null, ader);
+        }
+    });
 }
 
 const DeliverAd = exports.DeliverAd = (param, callback) => {

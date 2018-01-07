@@ -79,7 +79,15 @@ const CreateAuthAd = exports.CreateAuthAd = (param, callback) => {
 }
 
 const GetDefaultAd = exports.GetDefaultAd = (param, callback) => {
-    adModel.findOne({ isDefault: true }, callback);
+    adModel.findOne({ isDefault: true })
+    .exec((err, ad) => {
+        if( err
+            || !ad ) {
+            callback(err || new Error('GetDefaultAd: ad is empty'));
+        } else {
+            callback(null, ad);
+        }
+    });
 }
 
 const GetAdById = exports.GetAdById = (param, callback) => {
@@ -88,7 +96,15 @@ const GetAdById = exports.GetAdById = (param, callback) => {
         return callback(new Error('GetAdById: param is error'));
     }
 
-    adModel.findById(param.adId, callback);
+    adModel.findById(param.adId)
+    .exec((err, ad) => {
+        if( err
+            || !ad ) {
+            callback(err || new Error('GetAdById: ad is empty'));
+        } else {
+            callback(null, ad);
+        }
+    });
 }
 
 const UpdateWechatMpPreAuthCode = exports.UpdateWechatMpPreAuthCode = (param, callback) => {

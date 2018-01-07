@@ -39,7 +39,8 @@ const WechatLogin = exports.WechatLogin = (param, callback) => {
         return callback(new Error('WechatLogin: param is error'));
     }
 
-    userModel.findOne({ 'authId.wechatId': param.wechatId }, (err, user) => {
+    userModel.findOne({ 'authId.wechatId': param.wechatId })
+    .exec((err, user) => {
         if( err
             || !user ) {
             userModel.create({ 
@@ -66,8 +67,9 @@ const UpdateUserInfo = exports.UpdateUserInfo = (param, callback) => {
     }
 
     userModel.findById(param.userId)
-    .exec(function (err, user) {
-        if( err ) {
+    .exec((err, user) => {
+        if( err
+            || !user ) {
             callback(new Error('UpdateUserInfo: can not find'));
         } else {
             user.info.nickname = param.nickname;
