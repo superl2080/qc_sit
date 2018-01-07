@@ -178,9 +178,8 @@ const DeliverAd = exports.DeliverAd = (param, callback) => {
     }
 
     adModel.find({ state: 'DELIVER' })
-    .gt('count', 0)
+    .gt('deliverInfo.count', 0)
     .nin('wechatMpAuthInfo.appid', param.appids)
-    .sort('-deliverInfo.priority createDate')
     .$where(function () {
         if( this.deliverInfo.partnerType == 'WHITE' ){
             return this.deliverInfo.partnerIds.indexOf(param.partnerId) >= 0;
@@ -190,6 +189,7 @@ const DeliverAd = exports.DeliverAd = (param, callback) => {
             return true;
         }
     })
+    .sort('-deliverInfo.priority createDate')
     .exec(function (err, ads) {
         if( err
             || !ads ) {
