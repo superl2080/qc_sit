@@ -121,7 +121,8 @@ const CancelOnePointOrder = exports.CancelOnePointOrder = (param, callback) => {
 
     pointOrderModel.findOne(option)
     .exec((err, pointOrder) => {
-        if( err ) {
+        if( err
+            || !pointOrder ) {
             callback(null);
         } else {
             pointOrder.state = 'CANCEL';

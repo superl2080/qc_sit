@@ -30,16 +30,17 @@ try {
 
 
 const CheckPassword = exports.CheckPassword = (param, callback) => {
-    if( !param ||
-        !param.logid ||
-        !param.password ) {
+    if( !param
+        || !param.logid
+        || !param.password ) {
         callback(new Error('param is error'));
         return ;
     }
 
     staffModel.findOne({ logid: param.logid })
     .exec(function (err, staff) {
-        if( !staff ) {
+        if( err 
+            || !staff ) {
             callback(new Error('can not find staff'));
         } else {
             callback(null, cryptHelper.PasswordCompare({

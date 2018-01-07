@@ -76,12 +76,12 @@ const UpdateUserInfo = exports.UpdateUserInfo = (param, callback) => {
             user.info.province = param.province;
             user.info.country = param.country;
             if( user.info.sex == 1 ){
-                user.info.tags.push('男');
+                if ( user.info.tags.indexOf('男') < 0 ) user.info.tags.push('男');
             } else if( user.info.sex == 2 ){
-                user.info.tags.push('女');
+                if ( user.info.tags.indexOf('女') < 0 ) user.info.tags.push('女');
             }
-            user.info.tags.push(user.info.city);
-            user.info.tags.push(user.info.province);
+            if ( user.info.tags.indexOf(user.info.city) < 0 ) user.info.tags.push(user.info.city);
+            if ( user.info.tags.indexOf(user.info.province) < 0 ) user.info.tags.push(user.info.province);
             user.save(callback);
         }
     });

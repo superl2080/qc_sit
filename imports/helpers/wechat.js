@@ -1,6 +1,7 @@
 
 const async = require('async');
 const adModel = require('../models/ad');
+const userModel = require('../models/user');
 const systemConfigModel = require('../models/systemConfig');
 const wechatApi = require('../api/wechat');
 const toolHelper = require('./tool');

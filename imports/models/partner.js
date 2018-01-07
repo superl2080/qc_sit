@@ -42,16 +42,17 @@ try {
 
 
 const CheckPassword = exports.CheckPassword = (param, callback) => {
-    if( !param ||
-        !param.logid ||
-        !param.password ) {
+    if( !param
+        || !param.logid
+        || !param.password ) {
         callback(new Error('param is error'));
         return ;
     }
 
     partnerModel.findOne({ logid: param.logid })
     .exec(function (err, partner) {
-        if( !partner ) {
+        if( err 
+            || !partner ) {
             callback(new Error('can not find partner'));
         } else {
             callback(null, cryptHelper.PasswordCompare({
@@ -76,9 +77,8 @@ const GetDefaultPartner = exports.GetDefaultPartner = (param, callback) => {
 }
 
 const PartnerIncome = exports.PartnerIncome = (param, callback) => {
-    if( !param ||
-        !param.partnerId ||
-        !param.income ) {
+    if( !param
+        || !param.partnerId ) {
         callback(new Error('param is error'));
         return ;
     }

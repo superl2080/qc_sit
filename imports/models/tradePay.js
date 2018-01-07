@@ -34,10 +34,8 @@ const CreateTradePay = exports.CreateTradePay = (param, callback) => {
     if( !param
         || !param.pointOrderId
         || !param.userId
-        || !param.partnerId
-        || !param.payout
-        || !param.income ) {
-        returncallback(new Error('CreateTradePay: param is error'));
+        || !param.partnerId ) {
+        return callback(new Error('CreateTradePay: param is error'));
     }
 
     let newTradePay = { 
