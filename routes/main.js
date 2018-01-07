@@ -48,6 +48,34 @@ router.get('/scan/point/:id', function(req, res, next) {
 });
 
 
+router.get('/subscribe/:appid', function(req, res, next) {
+    console.log('[GET] /subscribe');
+
+    req.session.flow = {
+        state: 'SUBSCRIBE',
+        appid: req.params.appid
+    };
+
+    var option = {
+        req: req,
+        res: res
+    };
+
+    if(!req.session.userInfo) {
+        async.auto({
+            RedirectToLogin: async.apply(RedirectToLogin, option)
+        }, function(err, results) {
+            if(!err) {
+            } else {
+                HandleError(option, err);
+            }
+        });
+    } else {
+        res.redirect('/home');
+    }
+});
+
+
 router.get('/home', function(req, res, next) {
     console.log('[GET] /home');
 
@@ -406,30 +434,6 @@ router.post('/wechat/payBack', function(req, res, next) {
     });
 });
 
-
-router.get('/subscribe/:appid', function(req, res, next) {
-    console.log('[GET] /subscribe');
-
-    req.session.flow = {
-        state: 'SUBSCRIBE',
-        appid: req.params.appid
-    };
-
-    var option = {
-        req: req,
-        res: res
-    };
-
-    async.auto({
-        CheckLogin: async.apply(UserLogin, option),
-    }, function(err, results) {
-        if(!err) {
-            renderContent(option);
-        } else {
-            HandleError(option, err);
-        }
-    });
-});
 
 
 
