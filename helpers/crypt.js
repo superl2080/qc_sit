@@ -182,7 +182,7 @@ const EncryptSha1 = (data) => {
 
     const hash = crypto.createHash('sha1');
     hash.update(data);
-    return hash.digest('hex').toUpperCase();
+    return hash.digest('hex');
 }
 
 const EncryptMd5 = (data) => {
