@@ -180,22 +180,13 @@ const DeliverAd = exports.DeliverAd = (param, callback) => {
     adModel.find({ state: 'DELIVER' })
     .gt('deliverInfo.count', 0)
     .nin('wechatMpAuthInfo.appid', param.appids)
-    .$where(function () {
-        if( this.deliverInfo.partnerType == 'WHITE' ){
-            return this.deliverInfo.partnerIds.indexOf(param.partnerId) >= 0;
-        } else if( this.deliverInfo.partnerType == 'BLACK' ){
-            return this.deliverInfo.partnerIds.indexOf(param.partnerId) < 0;
-        } else {
-            return true;
-        }
-    })
     .sort('-deliverInfo.priority createDate')
     .exec(function (err, ads) {
         if( err
             || !ads ) {
             callback(err || new Error('DeliverAd: ad is empty'));
         } else {
-            aderDeliverAd({
+            deliverEachAd({
                 i: 0,
                 ads: ads
             }, callback);
@@ -203,24 +194,26 @@ const DeliverAd = exports.DeliverAd = (param, callback) => {
     });
 }
 
-const aderDeliverAd = (param, callback) => {
-    aderModel.DeliverAd({
-        aderId: param.ads[param.i].aderId,
-        payout: param.ads[param.i].deliverInfo.payout
-    }, (err, result) => {
-        if( err
-            && param.i + 1 < param.ads.length ){
-            aderDeliverAd({
-                i: param.i + 1,
-                ads: param.ads
-            }, callback);
-        } else if( err ){
-            callback(err);
-        } else {
-            param.ads[param.i].deliverInfo.count -= 1;
-            param.ads[param.i].save(callback);
-        }
-    });
+const deliverEachAd = (param, callback) => {
+    
+    if( param.i < param.ads.length ) {
+        aderModel.DeliverAd({
+            aderId: param.ads[param.i].aderId,
+            payout: param.ads[param.i].deliverInfo.payout
+        }, (err, result) => {
+            if( err ){
+                deliverEachAd({
+                    i: param.i + 1,
+                    ads: param.ads
+                }, callback);
+            } else {
+                param.ads[param.i].deliverInfo.count -= 1;
+                param.ads[param.i].save(callback);
+            }
+        });
+    } else {
+        callback(new Error('DeliverAd: ad is empty'));
+    }
 }
 
 const CancelAd = exports.CancelAd = (param, callback) => {
