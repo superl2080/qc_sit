@@ -452,13 +452,14 @@ function UserLogin(params, callback) {
     if(!params.req.session.userInfo.authId ||
         !params.req.session.userInfo.authId.wechatId) {
         callback('ERROR_SERVICE');
-        return;
+    } else if(params.req.session.userInfo.info) {
+        callback(null, params.req.session.userInfo);
+    } else {
+        userModel.WechatLogin({ wechatId: params.req.session.userInfo.authId.wechatId }, function(err, userInfo){
+            params.req.session.userInfo = userInfo;
+            callback(null, userInfo);
+        });
     }
-
-    userModel.WechatLogin({ wechatId: params.req.session.userInfo.authId.wechatId }, function(err, userInfo){
-        params.req.session.userInfo = userInfo;
-        callback(null, userInfo);
-    });
 }
 
 
