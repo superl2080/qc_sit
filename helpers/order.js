@@ -223,7 +223,7 @@ const AdSubscribe = exports.AdSubscribe = (param, callback) => {
 
         GetAdById: ['GetPointById', (result, callback) => {
             console.log('[CALL] AdSubscribe, GetAdById');
-            adModel.GetAdById({ adId: result.SubscribePointOrder.adId }, callback);
+            adModel.GetAdById({ adId: result.SubscribePointOrder.adInfo.adId }, callback);
         }],
 
         CreateTradeAd: ['GetAdById', (result, callback) => {
@@ -231,7 +231,7 @@ const AdSubscribe = exports.AdSubscribe = (param, callback) => {
             let newTradeAd = {
                 pointOrderId: result.SubscribePointOrder._id,
                 userId: result.SubscribePointOrder.userId,
-                adId: result.SubscribePointOrder.adId,
+                adId: result.SubscribePointOrder.adInfo.adId,
                 aderId: result.GetAdById.aderId,
                 partnerId: result.GetPointById.partnerId,
                 payout: result.GetAdById.deliverInfo.payout,
