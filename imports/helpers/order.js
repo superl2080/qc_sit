@@ -119,7 +119,9 @@ const TestPointOrderDeliverAd = exports.TestPointOrderDeliverAd = (param, callba
             pointOrderModel.DeliverAd({
                 pointOrderId: param.pointOrder._id,
                 adInfo: adInfo
-            }, callback);
+            }, (err, pointOrder) => {
+                callback(err, { pointOrder: pointOrder });
+            });
         }
     });
         
