@@ -9,7 +9,6 @@ var pointOrderModel = require('../imports/models/pointOrder');
 var systemConfigModel = require('../imports/models/systemConfig');
 var tradePayModel = require('../imports/models/tradePay');
 var cryptHelper = require('../imports/helpers/crypt');
-var wechatHelper = require('../imports/helpers/wechat');
 var orderHelper = require('../imports/helpers/order');
 var serviceApi = require('../imports/api/service');
 var wechatApi = require('../imports/api/wechat');
@@ -120,7 +119,7 @@ router.get('/home', function(req, res, next) {
         async.auto({
             UserLogin: async.apply(UserLogin, option),
             AdSubscribe: ['UserLogin', function (result, callback) {
-                wechatHelper.AdSubscribe({
+                orderHelper.AdSubscribe({
                     userId: result.UserLogin._id,
                     appid: req.session.flow.appid
                 }, callback);
@@ -425,7 +424,7 @@ router.post('/wechat/payBack', function(req, res, next) {
     cryptHelper.ParseJsonFromXml(req.body, function (err, result) {
         console.log(result);
 
-        wechatHelper.FinishPay(result, (err, result) => {
+        orderHelper.FinishPay(result, (err, result) => {
             res.send(cryptHelper.GetXmlFromJsonForceCData({
                 return_code: 'SUCCESS',
                 return_msg: 'OK'
