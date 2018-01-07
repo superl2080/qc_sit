@@ -245,10 +245,10 @@ const AdSubscribe = exports.AdSubscribe = (param, callback) => {
             tradeAdModel.CreateTradeAd(newTradeAd, callback);
         }],
 
-        FinishPointOrder: ['CreateTradePay', (result, callback) => {
+        FinishPointOrder: ['CreateTradeAd', (result, callback) => {
             console.log('[CALL] FinishPay, FinishPointOrder');
             FinishPointOrder({
-                trade: result.CreateTradePay,
+                trade: result.CreateTradeAd,
                 point: result.GetPointById,
                 pointOrder: result.SubscribePointOrder,
                 payInfo: {
