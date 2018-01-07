@@ -405,17 +405,17 @@ router.post('/page/loading/loaded', function(req, res, next) {
             }, 500);
         }],
         GetPointOrderInfo: ['SetTimeout', function (results, callback) {
-            if(!params.req.session.pointOrder ) {
+            if(!req.session.pointOrder ) {
                 callback(null);
             } else {
                 pointOrderModel.GetPointOrder({
-                    pointOrderId: params.req.session.pointOrder._id
+                    pointOrderId: req.session.pointOrder._id
                 }, function(err, pointOrder){
                     if(pointOrder) {
                         if(pointOrder.state == 'SUCCESS') {
                             req.session.flow.takeItemRes = 'SUCCESS'
                         }
-                        params.req.session.pointOrder = pointOrder;
+                        req.session.pointOrder = pointOrder;
                         callback(null);
                     } else {
                         callback('ERROR_SERVICE');
