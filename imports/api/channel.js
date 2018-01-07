@@ -17,7 +17,7 @@ const DeliverChannelAd = exports.DeliverChannelAd = (param, callback) => {
     } else if( param.channerl == 'YUNDAI') {
         url = YUNDAI_DELIVER_URL;
     } else {
-        callback(new Error(DeliverChannelAd: param is error));
+        callback(new Error('DeliverChannelAd: param is error'));
     }
 
     toolHelper.PostJson({
