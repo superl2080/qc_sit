@@ -12,6 +12,7 @@ var cryptHelper = require('../imports/helpers/crypt');
 var wechatHelper = require('../imports/helpers/wechat');
 var orderHelper = require('../imports/helpers/order');
 var serviceApi = require('../imports/api/service');
+var wechatApi = require('../imports/api/wechat');
 
 const router = express.Router();
 
