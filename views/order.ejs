@@ -7,26 +7,24 @@
         <link type="text/css" rel="stylesheet" href="/stylesheets/main.min.css" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 
-        <script type="text/javascript">
-            var takeItemRes = null;
-            var deviceInfo_type = null;
-        </script>
     </head>  
 
     <body>
 
         <div id="frame-content">
-<%  if(page == "HOME") { %>
-            <% include page-home %>
-<%  } else if(page == "ORDER") { %>
-            <% include page-order %>
+<%  if(order.state == "SUCCESS") { %>
+            <% include page-success %>
+<%  } else if(order.state == "FAIL" || order.state == "CANCEL") { %>
+            <% include page-fail %>
 <%  } else if(page == "LOADING") { %>
             <% include page-loading %>
+<%  } else { %>
+            <% include page-order %>
 <%  } %>
         </div>
 
         <script type="text/javascript" src="javascripts/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="javascripts/materialize.min.js"></script>
-        <script type="text/javascript" src="javascripts/main.min.js"></script>
+        <script type="text/javascript" src="javascripts/order.min.js"></script>
     </body>  
 </html>  

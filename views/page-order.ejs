@@ -1,12 +1,9 @@
 
 <div class="home-top z-depth-1">
     <div class="home-top-left">
-        <h5>免费领用</h5>
+        <h5>青橙 - 免费领用</h5>
     </div>
 
-    <div class="home-top-right">
-        <a class="black-text" id="home"><h6>< 返回</h6></a>
-    </div>
 </div>
 
 <div class="order">
@@ -15,7 +12,7 @@
             <p>纸帕巾  ×1</p>
         </div>
         <div class="row-right">
-            <p>￥<%= deviceInfo.deployInfo.payout / 100 %></p>
+            <p>￥<%= order.price / 100 %></p>
         </div>
     </div>
 
@@ -23,7 +20,7 @@
         <div class="row-left">
         </div>
         <div class="row-right">
-            <p>小计  ￥<%= deviceInfo.deployInfo.payout / 100 %></p>
+            <p>小计  ￥<%= order.price / 100 %></p>
         </div>
     </div>
     <div class="order-row">
@@ -33,21 +30,16 @@
     </div>
 </div>
 
-<%  if(activityInfo) { %>
+<%  if(order.adInfo) { %>
 <div class="activity border">
     <div class="activity-left">
         <h5 class="wrap"><span class="card-panel z-depth-0 pink lighten-2 white-text">免</span>限时任务，本单免费领用</h5>
         <h6 class="wrap">1. 长按右边二维码点击识别</h6>
-<%  if(activityInfo.auth) { %>
         <h6 class="wrap">2. 关注推荐公众号即可领取</h6>
-<%  } %>
-<%  if(!activityInfo.auth) { %>
-        <h6 class="wrap">2. 关注推荐公众号</h6>
-        <h6 class="wrap">3. 输入<%= activityInfo.auto_reply %>, 点击链接领取</h6>
-<%  } %>
+
     </div>
     <div class="activity-right">
-        <img src=<%= activityInfo.qrcodeUrl %> />
+        <img src=<%= order.adInfo.qrcode_url %> />
     </div>
 </div>
 <%  } %>
