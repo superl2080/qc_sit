@@ -12,10 +12,10 @@
     <body>
 
         <div id="frame-content">
-<%  if(order.state == "SUCCESS") { %>
-            <% include page-success %>
-<%  } else if(order.state == "FAIL" || order.state == "CANCEL") { %>
+<%  if(!order || order.state == "FAIL" || order.state == "CANCEL") { %>
             <% include page-fail %>
+<%  } else if(order.state == "SUCCESS") { %>
+            <% include page-success %>
 <%  } else if(page == "LOADING") { %>
             <% include page-loading %>
 <%  } else { %>
