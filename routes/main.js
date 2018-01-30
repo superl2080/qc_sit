@@ -76,8 +76,10 @@ router.get('/order', function(req, res, next) {
 
         } else {
             const json = JSON.parse(body);
+            let order;
+            if( json.code === 0 ) order = json.data;
             res.render('order', {
-                order: json.data,
+                order: order,
                 page: req.query.page,
             });
         }
