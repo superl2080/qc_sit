@@ -53,7 +53,6 @@ router.get('/subscribe/:appid', function(req, res, next) {
                 res.render('frame-error', { error: err });
 
             } else {
-                const json = JSON.parse(body);
                 res.redirect('http://' + req.headers.host + '/order?token=' + req.query.token + '&orderId=' + body.data.orderId);
             }
         });
