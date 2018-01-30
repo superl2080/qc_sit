@@ -104,8 +104,7 @@ router.post('/order/pay', function(req, res, next) {
             spbill_create_ip: req.headers['x-real-ip'],
         }
     }, (err, ret, body) => {
-        const json = JSON.parse(body);
-        res.send(json.data);
+        res.send(body.data);
     });
 
 });
