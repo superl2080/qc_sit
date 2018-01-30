@@ -33,7 +33,12 @@ function bindEvent() {
 }
 
 function orderPay() {
-    $.post("/order/pay", function(results) {
+    var token = GetUrlParam('token');
+    var orderId = GetUrlParam('orderId');
+    $.post("/order/pay",{
+        token: token,
+        orderId: orderId
+    }, function(results) {
         WeixinJSBridge.invoke('getBrandWCPayRequest', results, function(res) {
             if(res.err_msg == "get_brand_wcpay_request:ok" ) {
                 window.location.replace(window.location.href + '&page=LOADING');
@@ -42,4 +47,26 @@ function orderPay() {
             }
         });
     });
+}
+
+function GetUrlParam(paraName) {
+    var url = document.location.toString();
+    var arrObj = url.split("?");
+
+    if (arrObj.length > 1) {
+        var arrPara = arrObj[1].split("&");
+        var arr;
+
+        for (var i = 0; i < arrPara.length; i++) {
+            arr = arrPara[i].split("=");
+
+            if (arr != null && arr[0] == paraName) {
+                return arr[1];
+            }
+        }
+        return "";
+    }
+    else {
+        return "";
+    }
 }
