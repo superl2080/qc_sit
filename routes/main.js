@@ -13,7 +13,7 @@ router.get('/scan/point/:pointId', function(req, res, next) {
     var WECHAT_AGENT = new RegExp('MicroMessenger');
 
     if(WECHAT_AGENT.test(req.headers['user-agent'])) {
-        let url = SERVICE_URL + '/user/scan/wechat?pointId=' + req.params.pointId;
+        let url = SERVICE_URL + '/sit/user/wechatScanPoint?pointId=' + req.params.pointId;
         url += '&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + '/order');
         res.redirect(url);
 
@@ -26,36 +26,15 @@ router.get('/scan/point/:pointId', function(req, res, next) {
 router.get('/subscribe/:appid', function(req, res, next) {
     console.log('[GET] /subscribe/:appid, appid:' + req.params.appid);
     
-    if( !req.query.token ){
-        var WECHAT_AGENT = new RegExp('MicroMessenger');
+    var WECHAT_AGENT = new RegExp('MicroMessenger');
 
-        if(WECHAT_AGENT.test(req.headers['user-agent'])) {
-            let url = SERVICE_URL + '/user/login/wechat?redirect_uri=' + encodeURIComponent('http://' + req.headers.host + '/subscribe/' + req.params.appid);
-            res.redirect(url);
+    if(WECHAT_AGENT.test(req.headers['user-agent'])) {
+        let url = SERVICE_URL + '/sit/user/wechatSubscribeMp?appid=' + req.params.appid;
+        url += '&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + '/order');
+        res.redirect(url);
 
-        } else {
-            res.render('frame-error', {error: {message: '请使用微信打开链接', status: '抱歉，目前仅支持微信客户端使用本产品'}});
-        }
     } else {
-        request.post({
-            url: SERVICE_URL + '/channel/subscribe',
-            method: 'POST',
-            headers: {  
-                'content-type': 'application/json',
-            },
-            json: {
-                userId: req.query.token,
-                appid: req.params.appid,
-            },
-        }, (err, ret, body) => {
-            if(err
-                || ret.statusCode != 200 ) {
-                res.render('frame-error', { error: err });
-
-            } else {
-                res.redirect('http://' + req.headers.host + '/order?token=' + req.query.token + '&orderId=' + body.data.orderId);
-            }
-        });
+        res.render('frame-error', {error: {message: '请使用微信打开链接', status: '抱歉，目前仅支持微信客户端使用本产品'}});
     }
 });
 
@@ -64,7 +43,7 @@ router.get('/order', function(req, res, next) {
     console.log('[GET] /order, query:');
     console.log(req.query);
 
-    let url = SERVICE_URL + '/order?token=' + req.query.token;
+    let url = SERVICE_URL + '/sit/order?token=' + req.query.token;
     url += '&orderId=' + req.query.orderId;
 
     request.get({
@@ -92,7 +71,7 @@ router.post('/order/pay', function(req, res, next) {
     console.log('[POST] /order/pay');
 
     request.post({
-        url: SERVICE_URL + '/order/prepay/wechat',
+        url: SERVICE_URL + '/sit/order/wechatPrepay',
         method: 'POST',
         headers: {  
             'content-type': 'application/json',
