@@ -4,7 +4,6 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session)
 const main = require('./routes/main');
@@ -13,15 +12,12 @@ const app = express();
 const router = exports.router = express.Router();
 
 
-mongoose.connect(process.env.MONGO_URL, {useMongoClient: true});
-
 app.use(session({
     secret: 'sit51qingchengcom',
     resave: true,
     saveUninitialized: true,
     rolling: true,
     cookie: { maxAge: 180000, secure: false },
-    store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 
 // view engine setup
