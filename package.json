@@ -22,6 +22,6 @@
     "morgan": "^1.8.2",
     "pm2": "^2.6.1",
     "request": "^2.81.0",
-    "serve-favicon": "^2.4.3",
+    "serve-favicon": "^2.4.3"
   }
 }
