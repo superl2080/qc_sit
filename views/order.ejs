@@ -12,7 +12,9 @@
     <body>
 
         <div id="frame-content">
-<%  if(!order || order.state == "FAIL" || order.state == "CANCEL") { %>
+<%  if(page == "PRE") { %>
+            <% include page-pre %>
+<%  } else if(!order || order.state == "FAIL" || order.state == "CANCEL") { %>
             <% include page-fail %>
 <%  } else if(order.state == "SUCCESS") { %>
             <% include page-success %>

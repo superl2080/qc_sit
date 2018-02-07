@@ -43,26 +43,50 @@ router.get('/order', function(req, res, next) {
     console.log('[GET] /order, query:');
     console.log(req.query);
 
-    let url = SERVICE_URL + '/sit/order?token=' + req.query.token;
-    url += '&orderId=' + req.query.orderId;
+    if( req.query.subscribe === '0' ){
+        let url = SERVICE_URL + '/sit/order/pre?token=' + req.query.token;
+        url += '&pointId=' + req.query.pointId;
 
-    request.get({
-        url: url,
-    }, (err, ret, body) => {
-        if(err
-            || ret.statusCode != 200 ) {
-            res.render('frame-error', { error: err });
+        request.get({
+            url: url,
+        }, (err, ret, body) => {
+            if(err
+                || ret.statusCode != 200 ) {
+                res.render('frame-error', { error: err });
 
-        } else {
-            const json = JSON.parse(body);
-            let order;
-            if( json.code === 0 ) order = json.data;
-            res.render('order', {
-                order: order,
-                page: req.query.page,
-            });
-        }
-    });
+            } else {
+                const json = JSON.parse(body);
+                res.render('order', {
+                    qrcodeUrl: json.data.qrcodeUrl,
+                    page: 'PRE',
+                });
+            }
+        });
+    } else if( req.query.orderId !== undefined
+        && req.query.token !== undefined ){
+        let url = SERVICE_URL + '/sit/order?token=' + req.query.token;
+        url += '&orderId=' + req.query.orderId;
+
+        request.get({
+            url: url,
+        }, (err, ret, body) => {
+            if(err
+                || ret.statusCode != 200 ) {
+                res.render('frame-error', { error: err });
+
+            } else {
+                const json = JSON.parse(body);
+                let order;
+                if( json.code === 0 ) order = json.data;
+                res.render('order', {
+                    order: order,
+                    page: req.query.page,
+                });
+            }
+        });
+    } else {
+        res.render('frame-error', {error: {message: '请重新扫码领取', status: '抱歉，网络出现异常，请重新扫码尝试领取。'}});
+    }
 
 });
 
