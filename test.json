@@ -3,7 +3,7 @@
         {
             "name": "sittest",
             "script": "./bin/www",
-            "instances": "1",
+            "instances": "MAX",
             "exec_mode": "cluster",
             "env": {
                 "WECHAT_MP_APP_ID": "wx1676ae64c9ab902c",
