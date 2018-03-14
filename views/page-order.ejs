@@ -11,10 +11,10 @@
 <div class="order">
     <div class="order-row">
         <div class="row-left">
-            <p>纸帕巾  ×1</p>
+            <p><%= order.item.name %>  ×1</p>
         </div>
         <div class="row-right">
-            <p>￥<%= order.price / 100 %></p>
+            <p>￥<%= order.item.price / 100 %></p>
         </div>
     </div>
 
